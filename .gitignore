@@ -33,6 +33,11 @@ __pycache__/
 src/**/FULL_CONVERSATION_LOG.md
 src/**/RUN_LOG_*.md
 
+# Local installers and unrelated tool artifacts
+*.deb
+*.rpm
+*.AppImage
+
 # Local tool/editor metadata
 /.agents/
 /.codex/
