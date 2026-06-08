@@ -47,6 +47,7 @@ def update_sdf(sdf_path, params):
         'end_time': 'gpsSpoofEnd',
         'smooth_duration': 'gpsSmoothTransitionDuration',
         'smooth_exit_duration': 'gpsSmoothExitDuration',
+        'hold_after_end': 'gpsSpoofHoldAfterEnd',
         'takeoff_z_threshold': 'gpsSpoofTakeoffZ',
     }
 
@@ -61,7 +62,10 @@ def update_sdf(sdf_path, params):
             elem = ET.SubElement(plugin, elem_name)
 
         old_val = elem.text
-        new_val = str(params[key])
+        if isinstance(params[key], bool):
+            new_val = str(params[key]).lower()
+        else:
+            new_val = str(params[key])
         elem.text = new_val
 
         if old_val != new_val:
@@ -74,6 +78,14 @@ def update_sdf(sdf_path, params):
     enable_elem.text = 'true'
 
     # Write back
+    children = list(plugin)
+    if children:
+        plugin.text = '\n          '
+        for child in children[:-1]:
+            child.tail = '\n          '
+        children[-1].tail = '\n        '
+    if hasattr(ET, 'indent'):
+        ET.indent(tree, space='  ')
     tree.write(sdf_path, encoding='utf-8', xml_declaration=True)
 
     if updated:

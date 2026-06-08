@@ -44,6 +44,10 @@ class GpsSpoofAttackDemo:
             "~smooth_exit_duration",
             rospy.get_param("smooth_exit_duration", self.smooth_transition_duration)
         ))
+        self.gps_spoof_hold_after_end = bool(rospy.get_param(
+            "~gps_spoof_hold_after_end",
+            rospy.get_param("gps_spoof_hold_after_end", True)
+        ))
         self.gps_spoof_start_s = self.warmup_time + self.pre_attack_time
         self.gps_spoof_end_s = self.gps_spoof_start_s + self.attack_duration
         self.gps_spoof_takeoff_z = float(rospy.get_param(
@@ -135,6 +139,14 @@ class GpsSpoofAttackDemo:
             self.gps_spoof_takeoff_z = get_float("gpsSpoofTakeoffZ", self.gps_spoof_takeoff_z)
             self.smooth_transition_duration = get_float("gpsSmoothTransitionDuration", self.smooth_transition_duration)
             self.smooth_exit_duration = get_float("gpsSmoothExitDuration", self.smooth_exit_duration)
+
+            def get_bool(name, default):
+                elem = plugin.find(name)
+                if elem is None or elem.text is None:
+                    return default
+                return elem.text.strip().lower() in ("1", "true", "yes", "on")
+
+            self.gps_spoof_hold_after_end = get_bool("gpsSpoofHoldAfterEnd", self.gps_spoof_hold_after_end)
             self.spoof_offset = Vector3(
                 get_float("gpsSpoofOffsetX", self.spoof_offset.x),
                 get_float("gpsSpoofOffsetY", self.spoof_offset.y),
@@ -147,11 +159,12 @@ class GpsSpoofAttackDemo:
             )
             self.attack_duration = max(0.0, self.gps_spoof_end_s - self.gps_spoof_start_s)
             rospy.loginfo(
-                "Loaded GPS spoof params from SDF: start=%.2fs end=%.2fs offset=(%.3f, %.3f, %.3f) drift=(%.3f, %.3f, %.3f) smooth_in=%.2fs smooth_exit=%.2fs takeoff_z=%.2fm",
+                "Loaded GPS spoof params from SDF: start=%.2fs end=%.2fs offset=(%.3f, %.3f, %.3f) drift=(%.3f, %.3f, %.3f) smooth_in=%.2fs smooth_exit=%.2fs hold_after_end=%s takeoff_z=%.2fm",
                 self.gps_spoof_start_s, self.gps_spoof_end_s,
                 self.spoof_offset.x, self.spoof_offset.y, self.spoof_offset.z,
                 self.drift_rate.x, self.drift_rate.y, self.drift_rate.z,
-                self.smooth_transition_duration, self.smooth_exit_duration, self.gps_spoof_takeoff_z,
+                self.smooth_transition_duration, self.smooth_exit_duration,
+                str(self.gps_spoof_hold_after_end), self.gps_spoof_takeoff_z,
             )
         except Exception as exc:
             rospy.logwarn("Failed to load GPS spoof params from %s: %s", self.gps_spoof_sdf, exc)
@@ -219,7 +232,9 @@ class GpsSpoofAttackDemo:
         attack_start, attack_end, attack_stop = window
         smooth_in_duration = max(0.0, self.smooth_transition_duration)
         smooth_exit_duration = max(0.0, self.smooth_exit_duration)
-        if t < attack_start or t > attack_stop:
+        if t < attack_start:
+            return Vector3(0.0, 0.0, 0.0)
+        if not self.gps_spoof_hold_after_end and t > attack_stop:
             return Vector3(0.0, 0.0, 0.0)
 
         tau = t - attack_start
@@ -231,7 +246,7 @@ class GpsSpoofAttackDemo:
         if smooth_in_duration > 0.0 and tau < smooth_in_duration:
             normalized_tau = tau / smooth_in_duration
             attack_scale = 3.0 * normalized_tau**2 - 2.0 * normalized_tau**3
-        elif smooth_exit_duration > 0.0 and tau > attack_duration:
+        elif not self.gps_spoof_hold_after_end and smooth_exit_duration > 0.0 and tau > attack_duration:
             time_since_end = tau - attack_duration
             normalized_tau = 1.0 - (time_since_end / smooth_exit_duration)
             normalized_tau = max(0.0, min(1.0, normalized_tau))
@@ -252,7 +267,10 @@ class GpsSpoofAttackDemo:
         takeoff_t = self.gps_takeoff_sim_time - self.run_start_sim_time
         attack_start = takeoff_t + self.gps_spoof_start_s
         attack_end = takeoff_t + self.gps_spoof_end_s
-        attack_stop = attack_end + max(0.0, self.smooth_exit_duration)
+        if self.gps_spoof_hold_after_end:
+            attack_stop = attack_end
+        else:
+            attack_stop = attack_end + max(0.0, self.smooth_exit_duration)
         return attack_start, attack_end, attack_stop
 
     def _phase_for_time(self, t):
@@ -264,6 +282,8 @@ class GpsSpoofAttackDemo:
             return "baseline"
         if t <= attack_end:
             return "attack"
+        if self.gps_spoof_hold_after_end:
+            return "hold"
         return "post_attack"
 
     def _make_raw_setpoint(self, pose_msg):

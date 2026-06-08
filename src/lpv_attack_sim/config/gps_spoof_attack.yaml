@@ -23,6 +23,8 @@ gps_spoof_drift_rate:
 smooth_transition_duration: 3.0
 # Longer exit duration reduces final recovery oscillation.
 smooth_exit_duration: 8.0
+# Keep the final spoofed GPS bias after the nominal attack window.
+gps_spoof_hold_after_end: true
 gps_spoof_takeoff_z: 1.5
 
 trajectory:

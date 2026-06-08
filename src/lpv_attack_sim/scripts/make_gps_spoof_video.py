@@ -108,8 +108,15 @@ def main():
             ax_traj.legend(loc="upper left")
 
             phase = data["phase"][idx]
-            status = "GPS SPOOF ON" if phase == "attack" else "NO SPOOF"
-            color = "#c0392b" if phase == "attack" else "#2c3e50"
+            if phase == "attack":
+                status = "GPS SPOOF ON"
+                color = "#c0392b"
+            elif phase == "hold":
+                status = "GPS SPOOF HOLD"
+                color = "#d35400"
+            else:
+                status = "NO SPOOF"
+                color = "#2c3e50"
             ax_traj.text(0.02, 0.02, "t = %.1f s  |  %s" % (data["t"][idx], status),
                          transform=ax_traj.transAxes, fontsize=12, color=color,
                          bbox=dict(boxstyle="round,pad=0.35", facecolor="white", edgecolor=color, alpha=0.9))

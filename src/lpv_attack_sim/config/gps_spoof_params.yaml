@@ -19,6 +19,9 @@ attack:
   smooth_duration: 3.0
   # Longer ramp-out reduces recovery oscillation after a large spoof bias.
   smooth_exit_duration: 8.0
+  # Keep the final spoofed bias after end_time so the vehicle stays on the
+  # displaced trajectory instead of recovering to the nominal trajectory.
+  hold_after_end: true
 
   # Takeoff detection threshold (meters, world Z coordinate)
   takeoff_z_threshold: 1.5
@@ -62,3 +65,11 @@ scenarios:
     drift_y: -0.04
     start_time: 30.0
     end_time: 65.0
+
+  recover:
+    offset_x: 2.0
+    offset_y: 1.5
+    drift_x: 0.03
+    start_time: 30.0
+    end_time: 65.0
+    hold_after_end: false

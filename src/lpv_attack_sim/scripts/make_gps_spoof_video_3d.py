@@ -52,6 +52,49 @@ def axis_limits(*series, pad=0.8):
     return lo, hi
 
 
+PHASE_STYLES = {
+    "baseline": ("Baseline", "#2c3e50"),
+    "attack": ("GPS spoof on", "#c0392b"),
+    "hold": ("Spoof hold", "#d35400"),
+    "post_attack": ("Recovery", "#7f8c8d"),
+}
+
+
+def phase_ranges(data):
+    ranges = []
+    start_idx = 0
+    phases = data["phase"]
+    for idx in range(1, len(phases)):
+        if phases[idx] != phases[start_idx]:
+            ranges.append((phases[start_idx], data["t"][start_idx], data["t"][idx - 1]))
+            start_idx = idx
+    ranges.append((phases[start_idx], data["t"][start_idx], data["t"][-1]))
+    return ranges
+
+
+def draw_phase_timeline(fig, data, ranges, idx):
+    axis = fig.add_axes([0.20, 0.045, 0.62, 0.055])
+    t0 = data["t"][0]
+    t1 = data["t"][-1]
+    for phase, start, end in ranges:
+        label, color = PHASE_STYLES.get(phase, (phase, "#7f8c8d"))
+        width = max(end - start, 1e-6)
+        axis.broken_barh([(start, width)], (0.0, 1.0), facecolors=color, alpha=0.82)
+        if width > 5.0:
+            axis.text(start + width / 2.0, 0.5, label, color="white", fontsize=8,
+                      ha="center", va="center", weight="bold")
+
+    current_t = data["t"][idx]
+    axis.axvline(current_t, color="black", linewidth=2.0)
+    axis.set_xlim(t0, t1)
+    axis.set_ylim(0.0, 1.0)
+    axis.set_yticks([])
+    axis.set_xlabel("simulation time / s", fontsize=8, labelpad=1)
+    axis.tick_params(axis="x", labelsize=8, pad=1)
+    for spine in axis.spines.values():
+        spine.set_visible(False)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Generate a 3D trajectory MP4 video for GPS spoofing demo.")
     parser.add_argument("--csv", default=None, help="CSV result file. Defaults to latest GPS spoof result.")
@@ -73,6 +116,7 @@ def main():
 
     frame_count = max(2, int(args.fps * args.duration))
     indices = [int(round(i * (n - 1) / (frame_count - 1))) for i in range(frame_count)]
+    ranges = phase_ranges(data)
 
     xlim = axis_limits(data["nominal_x"], data["actual_x"])
     ylim = axis_limits(data["nominal_y"], data["actual_y"])
@@ -93,9 +137,9 @@ def main():
             ax.plot(data["nominal_x"], data["nominal_y"], data["nominal_z"],
                     color="#3498db", linewidth=2.5, label="Nominal reference", alpha=0.7)
 
-            # Spoofed localization input (what PX4 thinks, grows with time)
+            # PX4 estimate after GPS fusion (what the controller believes).
             ax.plot(data["estimated_x"][:idx + 1], data["estimated_y"][:idx + 1], data["estimated_z"][:idx + 1],
-                    "--", color="#e67e22", linewidth=2.2, label="Attacked setpoint", alpha=0.9)
+                    "--", color="#e67e22", linewidth=2.2, label="PX4 estimated position", alpha=0.9)
 
             # Actual trajectory (true path, grows with time)
             ax.plot(data["actual_x"][:idx + 1], data["actual_y"][:idx + 1], data["actual_z"][:idx + 1],
@@ -121,13 +165,21 @@ def main():
 
             # Add time and phase status
             phase = data["phase"][idx]
-            status = "GPS SPOOF ON" if phase == "attack" else "NO SPOOF"
-            color = "#c0392b" if phase == "attack" else "#2c3e50"
+            if phase == "attack":
+                status = "GPS SPOOF ON"
+                color = "#c0392b"
+            elif phase == "hold":
+                status = "GPS SPOOF HOLD"
+                color = "#d35400"
+            else:
+                status = "NO SPOOF"
+                color = "#2c3e50"
             fig.text(0.02, 0.02, "t = %.1f s  |  %s" % (data["t"][idx], status),
                      fontsize=13, color=color, weight='bold',
                      bbox=dict(boxstyle="round,pad=0.5", facecolor="white", edgecolor=color, alpha=0.95))
 
-            fig.tight_layout()
+            fig.tight_layout(rect=[0.0, 0.10, 1.0, 1.0])
+            draw_phase_timeline(fig, data, ranges, idx)
             png_path = os.path.join(tmpdir, "frame_%05d.png" % frame_id)
             fig.savefig(png_path)
             plt.close(fig)

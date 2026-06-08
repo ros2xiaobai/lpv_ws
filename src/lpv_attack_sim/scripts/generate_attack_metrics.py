@@ -34,6 +34,7 @@ def compute_metrics(data):
     # Split by phase
     baseline = [r for r in data if r['phase'] == 'baseline']
     attack = [r for r in data if r['phase'] == 'attack']
+    hold = [r for r in data if r['phase'] == 'hold']
     post_attack = [r for r in data if r['phase'] == 'post_attack']
 
     if not attack:
@@ -87,6 +88,24 @@ def compute_metrics(data):
             metrics['attack']['max_acceleration_m_s2'] = np.max(velocity_changes)
             metrics['attack']['mean_acceleration_m_s2'] = np.mean(velocity_changes)
 
+    # === Persistent spoof hold analysis ===
+    if hold:
+        hold_errors = [r['err_to_nominal'] for r in hold]
+        hold_estimated_errors = [r.get('estimated_err_to_nominal', 0.0) for r in hold]
+        hold_estimate_gaps = [r.get('estimate_actual_gap', 0.0) for r in hold]
+        metrics['hold'] = {
+            'duration_s': hold[-1]['t'] - hold[0]['t'],
+            'initial_deviation_m': hold_errors[0],
+            'final_deviation_m': hold_errors[-1],
+            'mean_deviation_m': np.mean(hold_errors),
+            'min_deviation_m': np.min(hold_errors),
+            'max_deviation_m': np.max(hold_errors),
+            'mean_estimated_error_m': np.mean(hold_estimated_errors),
+            'final_estimated_error_m': hold_estimated_errors[-1],
+            'mean_estimate_actual_gap_m': np.mean(hold_estimate_gaps),
+            'final_estimate_actual_gap_m': hold_estimate_gaps[-1],
+        }
+
     # === Recovery phase analysis ===
     if post_attack:
         post_errors = [r['err_to_nominal'] for r in post_attack]
@@ -126,6 +145,40 @@ def compute_metrics(data):
         'total_duration_s': data[-1]['t'] - data[0]['t'],
         'total_samples': len(data),
         'attack_effectiveness': metrics['attack']['max_deviation_m'] / (metrics['baseline']['mean_tracking_error_m'] + 1e-6) if baseline else None,
+        'persistent_hold': bool(hold),
+    }
+
+    # === Spoofing success criteria ===
+    # A successful GPS spoof should keep the real trajectory displaced while
+    # PX4's fused estimate still appears close to the nominal reference.
+    success_thresholds = {
+        'min_hold_duration_s': 5.0,
+        'min_actual_deviation_m': 2.0,
+        'max_estimated_error_m': 0.5,
+        'min_estimate_actual_gap_m': 2.0,
+    }
+    if hold:
+        h = metrics['hold']
+        checks = {
+            'persistent_hold_available': True,
+            'hold_duration_ok': bool(h['duration_s'] >= success_thresholds['min_hold_duration_s']),
+            'actual_deviation_ok': bool(h['mean_deviation_m'] >= success_thresholds['min_actual_deviation_m']),
+            'estimated_tracks_nominal_ok': bool(h['mean_estimated_error_m'] <= success_thresholds['max_estimated_error_m']),
+            'estimate_truth_gap_ok': bool(h['mean_estimate_actual_gap_m'] >= success_thresholds['min_estimate_actual_gap_m']),
+        }
+    else:
+        checks = {
+            'persistent_hold_available': False,
+            'hold_duration_ok': False,
+            'actual_deviation_ok': False,
+            'estimated_tracks_nominal_ok': False,
+            'estimate_truth_gap_ok': False,
+        }
+
+    metrics['spoof_success'] = {
+        'passed': all(checks.values()),
+        'thresholds': success_thresholds,
+        'checks': checks,
     }
 
     return metrics
@@ -158,6 +211,28 @@ def format_metrics_text(metrics):
             lines.append(f"  Max acceleration:      {a['max_acceleration_m_s2']:.3f} m/s²")
         lines.append(f"  Mean velocity:         {a['mean_velocity_m_s']:.3f} m/s")
 
+    if 'hold' in metrics:
+        h = metrics['hold']
+        lines.append("\n[ Post-Attack Spoof Hold ]")
+        lines.append(f"  Duration:              {h['duration_s']:.2f} s")
+        lines.append(f"  Initial deviation:     {h['initial_deviation_m']:.3f} m")
+        lines.append(f"  Final deviation:       {h['final_deviation_m']:.3f} m")
+        lines.append(f"  Mean deviation:        {h['mean_deviation_m']:.3f} m")
+        lines.append(f"  Min/Max deviation:     {h['min_deviation_m']:.3f} / {h['max_deviation_m']:.3f} m")
+        lines.append(f"  Mean estimate error:   {h['mean_estimated_error_m']:.3f} m")
+        lines.append(f"  Mean EKF truth gap:    {h['mean_estimate_actual_gap_m']:.3f} m")
+
+    if 'spoof_success' in metrics:
+        ss = metrics['spoof_success']
+        checks = ss['checks']
+        lines.append("\n[ Spoofing Success Check ]")
+        lines.append(f"  Result:                {'PASS' if ss['passed'] else 'FAIL'}")
+        lines.append(f"  Persistent hold:       {checks['persistent_hold_available']}")
+        lines.append(f"  Hold duration OK:      {checks['hold_duration_ok']}")
+        lines.append(f"  Actual deviation OK:   {checks['actual_deviation_ok']}")
+        lines.append(f"  Estimate near nominal: {checks['estimated_tracks_nominal_ok']}")
+        lines.append(f"  Estimate/truth split:  {checks['estimate_truth_gap_ok']}")
+
     if 'post_attack' in metrics:
         p = metrics['post_attack']
         lines.append("\n[ Post-Attack Recovery ]")
@@ -178,6 +253,7 @@ def format_metrics_text(metrics):
         lines.append(f"  Total samples:         {s['total_samples']}")
         if s['attack_effectiveness']:
             lines.append(f"  Attack effectiveness:  {s['attack_effectiveness']:.1f}x baseline error")
+        lines.append(f"  Persistent hold:       {s['persistent_hold']}")
 
     lines.append("\n" + "=" * 70)
     return "\n".join(lines)

@@ -160,6 +160,8 @@ metrics_to_compare = [
     ('Mean deviation (m)', 'attack.mean_deviation_m', '.3f'),
     ('Final deviation (m)', 'attack.final_deviation_m', '.3f'),
     ('Max acceleration (m/s²)', 'attack.max_acceleration_m_s2', '.3f'),
+    ('Hold mean deviation (m)', 'hold.mean_deviation_m', '.3f'),
+    ('Hold final deviation (m)', 'hold.final_deviation_m', '.3f'),
     ('Recovery time (s)', 'post_attack.recovery_time_s', '.2f'),
     ('Final error after recovery (m)', 'post_attack.final_error_m', '.3f'),
     ('Attack effectiveness (×baseline)', 'summary.attack_effectiveness', '.2f'),
