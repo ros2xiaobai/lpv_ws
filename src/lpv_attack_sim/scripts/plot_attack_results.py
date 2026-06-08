@@ -1,23 +1,29 @@
 #!/usr/bin/env python3
 import argparse
 import csv
-import glob
 import os
+import sys
 
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+if SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, SCRIPT_DIR)
+
+from result_paths import latest_matching_file
+
 
 def latest_csv(results_dir):
-    # Try GPS spoof attack files first, then fall back to setpoint FDI attack files
-    files = sorted(glob.glob(os.path.join(results_dir, "gps_spoof_attack_*.csv")))
-    if not files:
-        files = sorted(glob.glob(os.path.join(results_dir, "setpoint_fdi_attack_*.csv")))
-    if not files:
-        files = sorted(glob.glob(os.path.join(results_dir, "true_gps_input_attack_*.csv")))
-    if not files:
+    patterns = [
+        "gps_spoof_attack_*.csv",
+        "setpoint_fdi_attack_*.csv",
+        "true_gps_input_attack_*.csv",
+    ]
+    try:
+        return latest_matching_file(results_dir, patterns)
+    except FileNotFoundError:
         raise FileNotFoundError("No attack result CSV found in %s" % results_dir)
-    return files[-1]
 
 
 def read_csv(path):

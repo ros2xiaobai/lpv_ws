@@ -19,6 +19,7 @@ catkin_install_python(PROGRAMS
   scripts/make_attack_video.py
   scripts/gps_spoof_attack_demo.py
   scripts/make_gps_spoof_video.py
+  scripts/result_paths.py
   scripts/true_gps_input_attack_demo.py
   scripts/make_true_gps_input_video.py
   scripts/gazebo_attack_preview.py

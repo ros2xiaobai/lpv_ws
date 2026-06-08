@@ -35,11 +35,11 @@ roslaunch lpv_attack_sim gps_spoof_deviation.launch
 
 # 3. 生成指标（仿真完成后）
 python3 src/lpv_attack_sim/scripts/generate_attack_metrics.py \
-    src/lpv_attack_sim/results/gps_spoof_attack_YYYYMMDD_HHMMSS.csv
+    src/lpv_attack_sim/results/YYYYMMDD_HHMMSS/gps_spoof_attack_YYYYMMDD_HHMMSS.csv
 
 # 4. 生成3D视频
 python3 src/lpv_attack_sim/scripts/make_gps_spoof_video_3d.py \
-    --csv src/lpv_attack_sim/results/gps_spoof_attack_YYYYMMDD_HHMMSS.csv
+    --csv src/lpv_attack_sim/results/YYYYMMDD_HHMMSS/gps_spoof_attack_YYYYMMDD_HHMMSS.csv
 ```
 
 ---
@@ -72,7 +72,8 @@ attack:
   drift_y: 0.0         # Y方向漂移率 (m/s)
   start_time: 28.0     # 起飞后开始时间 (s)
   end_time: 68.0       # 起飞后结束时间 (s)
-  smooth_duration: 4.0 # 平滑过渡时长 (s)
+  smooth_duration: 3.0      # 攻击进入平滑时长 (s)
+  smooth_exit_duration: 8.0 # 攻击退出平滑时长 (s)
   takeoff_z_threshold: 1.5  # 起飞检测高度 (m)
 ```
 
@@ -118,9 +119,9 @@ Attack effectiveness (×baseline)    |         8.46 |         0.88 |        32.0
 
 ## 输出文件说明
 
-每次仿真会生成以下文件（位于 `src/lpv_attack_sim/results/`）：
+每次仿真会先在 `src/lpv_attack_sim/results/` 下创建一个当前时间命名的子目录，例如 `20260608_183012/`，本次 CSV、指标和视频都会放在该目录中：
 
-1. **CSV数据日志**：`gps_spoof_attack_YYYYMMDD_HHMMSS.csv`
+1. **CSV数据日志**：`YYYYMMDD_HHMMSS/gps_spoof_attack_YYYYMMDD_HHMMSS.csv`
    - 包含时间序列数据：位置、速度、姿态、误差等
 
 2. **定量指标JSON**：`*_metrics.json`

@@ -15,8 +15,10 @@ attack:
   start_time: 30.0
   end_time: 65.0
 
-  # Smooth transition duration for ramp-in and ramp-out (seconds)
+  # Smooth transition duration for ramp-in (seconds)
   smooth_duration: 3.0
+  # Longer ramp-out reduces recovery oscillation after a large spoof bias.
+  smooth_exit_duration: 8.0
 
   # Takeoff detection threshold (meters, world Z coordinate)
   takeoff_z_threshold: 1.5

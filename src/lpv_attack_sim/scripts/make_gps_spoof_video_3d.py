@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import argparse
 import csv
-import glob
 import os
+import sys
 import tempfile
 
 import cv2
@@ -12,12 +12,18 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+if SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, SCRIPT_DIR)
+
+from result_paths import latest_matching_file
+
 
 def latest_csv(results_dir):
-    files = sorted(glob.glob(os.path.join(results_dir, "gps_spoof_attack_*.csv")))
-    if not files:
+    try:
+        return latest_matching_file(results_dir, "gps_spoof_attack_*.csv")
+    except FileNotFoundError:
         raise FileNotFoundError("No gps_spoof_attack_*.csv found in %s" % results_dir)
-    return files[-1]
 
 
 def read_csv(path):

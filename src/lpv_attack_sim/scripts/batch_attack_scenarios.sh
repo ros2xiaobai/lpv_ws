@@ -9,6 +9,21 @@ RESULTS_DIR="/home/lxx/LPV_ws/src/lpv_attack_sim/results"
 CONFIG_UPDATER="$SCRIPT_DIR/update_gps_spoof_config.py"
 METRICS_GEN="$SCRIPT_DIR/generate_attack_metrics.py"
 
+latest_gps_csv() {
+    local since="$1"
+    if [ -n "$since" ]; then
+        find "$RESULTS_DIR" -type f -name 'gps_spoof_attack_*.csv' -newermt "@$since" -printf '%T@ %p\n' 2>/dev/null \
+            | sort -nr \
+            | head -1 \
+            | cut -d' ' -f2-
+    else
+        find "$RESULTS_DIR" -type f -name 'gps_spoof_attack_*.csv' -printf '%T@ %p\n' 2>/dev/null \
+            | sort -nr \
+            | head -1 \
+            | cut -d' ' -f2-
+    fi
+}
+
 # Scenarios to test
 SCENARIOS=("mild" "moderate" "severe")
 
@@ -46,10 +61,11 @@ for scenario in "${SCENARIOS[@]}"; do
     # Launch simulation
     echo "[Step 2/4] Launching simulation..."
     cd /home/lxx/LPV_ws
+    RUN_STARTED_AT=$(date +%s)
     timeout 90s roslaunch lpv_attack_sim gps_spoof_deviation.launch > /tmp/sim_${scenario}.log 2>&1 || true
 
-    # Find the latest CSV
-    LATEST_CSV=$(ls -t "$RESULTS_DIR"/gps_spoof_attack_*.csv 2>/dev/null | head -1)
+    # Find the latest CSV in either the new timestamped run folders or old flat results.
+    LATEST_CSV=$(latest_gps_csv "$RUN_STARTED_AT")
 
     if [ -z "$LATEST_CSV" ] || [ ! -f "$LATEST_CSV" ]; then
         echo "[Warning] No CSV generated for scenario $scenario, skipping..."
@@ -96,6 +112,7 @@ echo "========================================================================"
 
 python3 - <<'EOF'
 import json
+import glob
 import os
 import sys
 
@@ -115,8 +132,8 @@ print("-" * 90)
 metrics_data = {}
 for scenario in scenarios:
     pattern = f"gps_spoof_attack_*_{scenario}_metrics.json"
-    import glob
-    files = glob.glob(os.path.join(results_dir, pattern))
+    files = glob.glob(os.path.join(results_dir, "**", pattern), recursive=True)
+    files.sort(key=os.path.getmtime, reverse=True)
     if files:
         with open(files[0], 'r') as f:
             metrics_data[scenario] = json.load(f)

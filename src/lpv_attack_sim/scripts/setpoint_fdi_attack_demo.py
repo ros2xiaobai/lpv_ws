@@ -2,8 +2,8 @@
 import csv
 import math
 import os
+import sys
 import time
-from datetime import datetime
 
 import rospy
 from gazebo_msgs.msg import ModelStates
@@ -11,6 +11,12 @@ from geometry_msgs.msg import PoseStamped, Vector3, TwistStamped
 from mavros_msgs.msg import ManualControl, OverrideRCIn, ParamValue, PositionTarget, State
 from mavros_msgs.srv import CommandBool, CommandLong, ParamSet, SetMode
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+if SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, SCRIPT_DIR)
+
+from result_paths import make_run_dir
 
 
 class SetpointFdiAttackDemo:
@@ -35,9 +41,9 @@ class SetpointFdiAttackDemo:
         self.yaw = float(rospy.get_param("~trajectory/yaw", rospy.get_param("trajectory/yaw", 0.0)))
 
         self.results_dir = rospy.get_param("~results_dir", rospy.get_param("results_dir", "/tmp"))
-        os.makedirs(self.results_dir, exist_ok=True)
-        stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.csv_path = os.path.join(self.results_dir, "setpoint_fdi_attack_%s.csv" % stamp)
+        self.run_dir, self.run_stamp = make_run_dir(self.results_dir)
+        self.csv_path = os.path.join(self.run_dir, "setpoint_fdi_attack_%s.csv" % self.run_stamp)
+        rospy.loginfo("Setpoint FDI results directory: %s", self.run_dir)
 
         topic_root = "/" + self.vehicle_ns
         self.state_sub = rospy.Subscriber(topic_root + "/mavros/state", State, self._state_cb, queue_size=1)

@@ -6,22 +6,24 @@ pre_attack_time: 26.0  # 修改为26秒，使攻击在飞行半圆时开始（π
 attack_duration: 35.0
 post_attack_time: 12.0
 
-# Simulated GPS/localization spoofing bias injected into PX4's localization input.
-# Positive x/y means PX4 is told the UAV is farther in +x/+y than it really is.
+# Fallback copy of the Gazebo GPS plugin spoofing parameters.
+# The demo script loads the authoritative values from gps_spoof.sdf when available.
 gps_spoof_offset:
-  x: 1.2
-  y: 0.8
+  x: 2.0
+  y: 1.5
   z: 0.0
 
 # Slow drift added after attack starts, in m/s.
 gps_spoof_drift_rate:
-  x: 0.015
+  x: 0.03
   y: 0.0
   z: 0.0
 
-# Smooth transition duration for attack onset (seconds)
-# Uses cubic polynomial to gradually ramp up from 0 to full offset
+# Smooth transition duration for attack onset (seconds).
 smooth_transition_duration: 3.0
+# Longer exit duration reduces final recovery oscillation.
+smooth_exit_duration: 8.0
+gps_spoof_takeoff_z: 1.5
 
 trajectory:
   type: circle

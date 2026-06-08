@@ -2,13 +2,19 @@
 import csv
 import math
 import os
-from datetime import datetime
+import sys
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+if SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, SCRIPT_DIR)
+
+from result_paths import make_run_dir
 
 
 def main():
     results_dir = "/home/lxx/LPV_ws/src/lpv_attack_sim/results"
-    os.makedirs(results_dir, exist_ok=True)
-    path = os.path.join(results_dir, "setpoint_fdi_attack_preview_%s.csv" % datetime.now().strftime("%Y%m%d_%H%M%S"))
+    run_dir, run_stamp = make_run_dir(results_dir)
+    path = os.path.join(run_dir, "setpoint_fdi_attack_preview_%s.csv" % run_stamp)
 
     dt = 1.0 / 30.0
     warmup_time = 4.0

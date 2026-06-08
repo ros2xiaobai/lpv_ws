@@ -71,7 +71,7 @@ source ~/LPV_ws/devel/setup.bash
 rosrun lpv_attack_sim plot_attack_results.py
 ```
 
-默认读取 `results/` 中最新的 CSV 文件，并生成：
+默认递归读取 `results/` 及其时间戳子目录中最新的 CSV 文件，并生成：
 
 - 三维轨迹对比图；
 - x/y/z 位置响应图；

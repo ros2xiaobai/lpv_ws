@@ -46,6 +46,7 @@ def update_sdf(sdf_path, params):
         'start_time': 'gpsSpoofStart',
         'end_time': 'gpsSpoofEnd',
         'smooth_duration': 'gpsSmoothTransitionDuration',
+        'smooth_exit_duration': 'gpsSmoothExitDuration',
         'takeoff_z_threshold': 'gpsSpoofTakeoffZ',
     }
 

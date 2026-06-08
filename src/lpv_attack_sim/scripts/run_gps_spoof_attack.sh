@@ -3,6 +3,22 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_UPDATER="$SCRIPT_DIR/update_gps_spoof_config.py"
+RESULTS_DIR="/home/lxx/LPV_ws/src/lpv_attack_sim/results"
+
+latest_gps_csv() {
+    local since="$1"
+    if [ -n "$since" ]; then
+        find "$RESULTS_DIR" -type f -name 'gps_spoof_attack_*.csv' -newermt "@$since" -printf '%T@ %p\n' 2>/dev/null \
+            | sort -nr \
+            | head -1 \
+            | cut -d' ' -f2-
+    else
+        find "$RESULTS_DIR" -type f -name 'gps_spoof_attack_*.csv' -printf '%T@ %p\n' 2>/dev/null \
+            | sort -nr \
+            | head -1 \
+            | cut -d' ' -f2-
+    fi
+}
 
 # Parse arguments
 SCENARIO="moderate"  # default
@@ -82,6 +98,7 @@ echo ""
 echo "[Step 3/3] Launching simulation..."
 cd /home/lxx/LPV_ws
 source devel/setup.bash
+RUN_STARTED_AT=$(date +%s)
 roslaunch lpv_attack_sim gps_spoof_deviation.launch
 
 # Post-processing
@@ -91,8 +108,8 @@ if [ "$GENERATE_METRICS" = "true" ] || [ "$GENERATE_VIDEO" = "true" ]; then
     echo "Post-Processing"
     echo "========================================================================"
 
-    # Find latest CSV
-    LATEST_CSV=$(ls -t src/lpv_attack_sim/results/gps_spoof_attack_*.csv 2>/dev/null | head -1)
+    # Find latest CSV in either the new timestamped run folders or old flat results.
+    LATEST_CSV=$(latest_gps_csv "$RUN_STARTED_AT")
 
     if [ -z "$LATEST_CSV" ] || [ ! -f "$LATEST_CSV" ]; then
         echo "Warning: No CSV file found, skipping post-processing"
