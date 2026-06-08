@@ -1,0 +1,597 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.5">
+  <world name="default">
+    <gui fullscreen="0">
+      <camera name="user_camera">
+        <pose frame="">35.008792 1.603497 6.90853 -0 0.125646 3.13697</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+    <scene>
+      <grid>0</grid>
+      <origin_visual>0</origin_visual>
+      <ambient>0.78 0.82 0.85 1</ambient>
+      <sky>
+        <clouds>
+          <speed>12</speed>
+        </clouds>
+      </sky>
+      <background>0.70 0.82 0.95 1</background>
+      <shadows>1</shadows>
+    </scene>
+    <physics name="default_physics" default="0" type="ode">
+      <gravity>0 0 -9.8066</gravity>
+      <ode>
+        <solver>
+          <type>quick</type>
+          <iters>10</iters>
+          <sor>1.3</sor>
+          <use_dynamic_moi_rescaling>0</use_dynamic_moi_rescaling>
+        </solver>
+        <constraints>
+          <cfm>0</cfm>
+          <erp>0.2</erp>
+          <contact_max_correcting_vel>100</contact_max_correcting_vel>
+          <contact_surface_layer>0.001</contact_surface_layer>
+        </constraints>
+      </ode>
+      <max_step_size>0.004</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>250</real_time_update_rate>
+      <magnetic_field>6.0e-6 2.3e-5 -4.2e-5</magnetic_field>
+    </physics>
+    <light name="sun" type="directional">
+      <pose frame="">0 0 1000 0 -0 0</pose>
+      <cast_shadows>1</cast_shadows>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.5 0.5 0.5 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.4</direction>
+    </light>
+    <model name="ground_plane">
+      <static>1</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode />
+              </torsional>
+            </friction>
+            <contact>
+              <ode />
+            </contact>
+            <bounce />
+
+          <max_contacts>10</max_contacts>
+        </collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+
+    <model name="city_terrain_1">
+      <static>1</static>
+      <link name="link">
+        <pose frame="">0 0 -5 0 -0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>500 500</size>
+            </plane>
+          </geometry>
+
+            <contact>
+              <ode>
+                <kp>1e+06</kp>
+                <kd>100</kd>
+                <max_vel>1</max_vel>
+                <min_depth>0</min_depth>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode />
+              </torsional>
+            </friction>
+            <bounce />
+
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <heightmap>
+              <use_terrain_paging>0</use_terrain_paging>
+              <texture>
+                <diffuse>model://ocean/materials/textures/soil_sand_0045_01.jpg</diffuse>
+                <normal>file://media/materials/textures/flat_normal.png</normal>
+                <size>10</size>
+              </texture>
+              <blend>
+                <min_height>0</min_height>
+                <fade_dist>1.5</fade_dist>
+              </blend>
+              <texture>
+                <diffuse>model://ocean/materials/textures/soil_sand_0045_01.jpg</diffuse>
+                <normal>file://media/materials/textures/flat_normal.png</normal>
+                <size>10</size>
+              </texture>
+              <blend>
+                <min_height>2.5</min_height>
+                <fade_dist>5</fade_dist>
+              </blend>
+              <texture>
+                <diffuse>model://city_terrain/materials/textures/forest.jpg</diffuse>
+                <normal>file://media/materials/textures/flat_normal.png</normal>
+                <size>10</size>
+              </texture>
+              <uri>model://city_terrain/materials/textures/city_terrain.jpg</uri>
+              <size>500 500 75</size>
+              <pos>40 -20 -5</pos>
+            </heightmap>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <pose frame="">0 0 0 0 -0 0</pose>
+    </model>
+    <model name="ocean_2">
+      <static>1</static>
+      <link name="ocean_link">
+        <visual name="ocean_visual1">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://ocean/mesh.dae</uri>
+              <scale>0.5 0.5 0.5</scale>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://ocean/materials/scripts/ocean.material</uri>
+              <name>Waves_GLSL</name>
+            </script>
+          </material>
+        </visual>
+        <visual name="ocean_below">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://ocean/mesh_below.dae</uri>
+              <scale>0.5 0.5 0.5</scale>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://ocean/materials/scripts/ocean.material</uri>
+              <name>Waves_GLSL</name>
+            </script>
+          </material>
+        </visual>
+        <visual name="north">
+          <pose frame="">250 0 -3.5 3.14159 -1.57079 3.14159</pose>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>7 500</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://ocean/materials/scripts/ocean.material</uri>
+              <name>Seabox</name>
+            </script>
+          </material>
+        </visual>
+        <visual name="south">
+          <pose frame="">-250 0 -3.5 3.14159 1.57079 3.14159</pose>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>7 500</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://ocean/materials/scripts/ocean.material</uri>
+              <name>Seabox</name>
+            </script>
+          </material>
+        </visual>
+        <visual name="west">
+          <pose frame="">0 250 -3.5 1.5708 -0 0</pose>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>500 7</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://ocean/materials/scripts/ocean.material</uri>
+              <name>Seabox</name>
+            </script>
+          </material>
+        </visual>
+        <visual name="east">
+          <pose frame="">0 -250 -3.5 -1.5708 0 0</pose>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>500 7</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://ocean/materials/scripts/ocean.material</uri>
+              <name>Seabox</name>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <pose frame="">40 -20 -2 0 -0 0</pose>
+    </model>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type="adiabatic" />
+    <wind />
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>0</latitude_deg>
+      <longitude_deg>0</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+    <state world_name="default">
+      <sim_time>1752 176000000</sim_time>
+      <real_time>1519 904767261</real_time>
+      <wall_time>1581412925 146493851</wall_time>
+      <iterations>287494</iterations>
+      <actor name="actor1">
+     <plugin name="actor_collisions_plugin" filename="libActorCollisionsPlugin.so">
+          <scaling collision="LHipJoint_LeftUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftUpLeg_LeftLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftLeg_LeftFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftFoot_LeftToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="RHipJoint_RightUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightUpLeg_RightLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightLeg_RightFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightFoot_RightToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="LowerBack_Spine_collision" scale="12.0 20.0 5.0 " />
+          <scaling collision="Spine_Spine1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck_Neck1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck1_Head_collision" scale="5.0 5.0 3.0" />
+          <scaling collision="LeftShoulder_LeftArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftArm_LeftForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftForeArm_LeftHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftFingerBase_LeftHandIndex1_collision" scale="4.0 4.0 3.0" />
+          <scaling collision="RightShoulder_RightArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightArm_RightForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightForeArm_RightHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightFingerBase_RightHandIndex1_collision" scale="4.0 4.0 3.0" />
+        </plugin>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+        <interpolate_x>1</interpolate_x>
+      </animation>
+      <plugin name="actor_plugin" filename="libActorPlugin.so">
+      </plugin>
+    </actor>
+
+    <actor name="actor2">
+     <plugin name="actor_collisions_plugin" filename="libActorCollisionsPlugin.so">
+          <scaling collision="LHipJoint_LeftUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftUpLeg_LeftLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftLeg_LeftFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftFoot_LeftToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="RHipJoint_RightUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightUpLeg_RightLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightLeg_RightFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightFoot_RightToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="LowerBack_Spine_collision" scale="12.0 20.0 5.0 " />
+          <scaling collision="Spine_Spine1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck_Neck1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck1_Head_collision" scale="5.0 5.0 3.0" />
+          <scaling collision="LeftShoulder_LeftArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftArm_LeftForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftForeArm_LeftHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftFingerBase_LeftHandIndex1_collision" scale="4.0 4.0 3.0" />
+          <scaling collision="RightShoulder_RightArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightArm_RightForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightForeArm_RightHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightFingerBase_RightHandIndex1_collision" scale="4.0 4.0 3.0" />
+        </plugin>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+        <interpolate_x>1</interpolate_x>
+      </animation>
+    </actor>
+    <actor name="actor3">
+     <plugin name="actor_collisions_plugin" filename="libActorCollisionsPlugin.so">
+          <scaling collision="LHipJoint_LeftUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftUpLeg_LeftLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftLeg_LeftFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftFoot_LeftToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="RHipJoint_RightUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightUpLeg_RightLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightLeg_RightFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightFoot_RightToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="LowerBack_Spine_collision" scale="12.0 20.0 5.0 " />
+          <scaling collision="Spine_Spine1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck_Neck1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck1_Head_collision" scale="5.0 5.0 3.0" />
+          <scaling collision="LeftShoulder_LeftArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftArm_LeftForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftForeArm_LeftHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftFingerBase_LeftHandIndex1_collision" scale="4.0 4.0 3.0" />
+          <scaling collision="RightShoulder_RightArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightArm_RightForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightForeArm_RightHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightFingerBase_RightHandIndex1_collision" scale="4.0 4.0 3.0" />
+        </plugin>
+      <skin>
+        <filename>moonwalk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="running">
+        <filename>run.dae</filename>
+        <scale>1.0</scale>
+        <interpolate_x>1</interpolate_x>
+      </animation>
+    </actor>
+    <actor name="actor4">
+     <plugin name="actor_collisions_plugin" filename="libActorCollisionsPlugin.so">
+          <scaling collision="LHipJoint_LeftUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftUpLeg_LeftLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftLeg_LeftFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftFoot_LeftToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="RHipJoint_RightUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightUpLeg_RightLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightLeg_RightFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightFoot_RightToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="LowerBack_Spine_collision" scale="12.0 20.0 5.0 " />
+          <scaling collision="Spine_Spine1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck_Neck1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck1_Head_collision" scale="5.0 5.0 3.0" />
+          <scaling collision="LeftShoulder_LeftArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftArm_LeftForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftForeArm_LeftHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftFingerBase_LeftHandIndex1_collision" scale="4.0 4.0 3.0" />
+          <scaling collision="RightShoulder_RightArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightArm_RightForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightForeArm_RightHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightFingerBase_RightHandIndex1_collision" scale="4.0 4.0 3.0" />
+        </plugin>
+      <skin>
+        <filename>moonwalk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="standing up">
+        <filename>stand.dae</filename>
+        <scale>1.0</scale>
+        <interpolate_x>1</interpolate_x>
+      </animation>
+    </actor>
+    <actor name="actor5">
+     <plugin name="actor_collisions_plugin" filename="libActorCollisionsPlugin.so">
+          <scaling collision="LHipJoint_LeftUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftUpLeg_LeftLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftLeg_LeftFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftFoot_LeftToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="RHipJoint_RightUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightUpLeg_RightLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightLeg_RightFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightFoot_RightToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="LowerBack_Spine_collision" scale="12.0 20.0 5.0 " />
+          <scaling collision="Spine_Spine1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck_Neck1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck1_Head_collision" scale="5.0 5.0 3.0" />
+          <scaling collision="LeftShoulder_LeftArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftArm_LeftForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftForeArm_LeftHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftFingerBase_LeftHandIndex1_collision" scale="4.0 4.0 3.0" />
+          <scaling collision="RightShoulder_RightArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightArm_RightForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightForeArm_RightHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightFingerBase_RightHandIndex1_collision" scale="4.0 4.0 3.0" />
+        </plugin>
+      <skin>
+        <filename>moonwalk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="sitting down">
+        <filename>sitting.dae</filename>
+        <scale>1.0</scale>
+        <interpolate_x>1</interpolate_x>
+      </animation>
+    </actor>
+
+
+
+
+
+      
+      <model name="city_terrain_1">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 -5 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="ground_plane">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="ocean_2">
+        <pose frame="">40 -20 -2 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="ocean_link">
+          <pose frame="">40 -20 -2 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="unit_cylinder">
+        <pose frame="">20.6722 33.4177 0.49998 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">20.6722 33.4177 0.49998 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 -9.8 -0 -0 -0</acceleration>
+          <wrench>0 0 -9.8 0 -0 0</wrench>
+        </link>
+      </model>
+      <light name="sun">
+        <pose frame="">0 0 1000 0 -0 0</pose>
+      </light>
+      <light name="user_directional_light_0">
+        <pose frame="">24.0343 3.49866 18 0 -0 0</pose>
+      </light>
+      <light name="user_point_light_0">
+        <pose frame="">-70.5235 -10.3411 1 0 -0 0</pose>
+      </light>
+    </state>
+    <model name="unit_cylinder">
+      <pose frame="">20.6722 33.4177 0.5 0 -0 0</pose>
+      <link name="link">
+        <inertial>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.145833</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.145833</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+          <pose frame="">0 0 0 0 -0 0</pose>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+
+            <contact>
+              <ode />
+            </contact>
+            <bounce />
+            <friction>
+              <torsional>
+                <ode />
+              </torsional>
+              <ode />
+            </friction>
+
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <include>
+      <name>demo_tree_oak_01</name>
+      <uri>model://oak_tree</uri>
+      <pose>-32 -24 0 0 0 0.2</pose>
+    </include>
+    <include>
+      <name>demo_tree_pine_01</name>
+      <uri>model://pine_tree</uri>
+      <pose>-20 32 0 0 0 -0.4</pose>
+    </include>
+    <include>
+      <name>demo_tree_oak_02</name>
+      <uri>model://oak_tree</uri>
+      <pose>38 -30 0 0 0 0.5</pose>
+    </include>
+    <include>
+      <name>demo_tree_pine_02</name>
+      <uri>model://pine_tree</uri>
+      <pose>48 28 0 0 0 -0.8</pose>
+    </include>
+    <include>
+      <name>demo_tree_oak_03</name>
+      <uri>model://oak_tree</uri>
+      <pose>2 -38 0 0 0 0.1</pose>
+    </include>
+    <include>
+      <name>demo_tree_pine_03</name>
+      <uri>model://pine_tree</uri>
+      <pose>64 10 0 0 0 1.2</pose>
+    </include>
+    <include>
+      <name>demo_tree_oak_04</name>
+      <uri>model://oak_tree</uri>
+      <pose>-44 8 0 0 0 -1.1</pose>
+    </include>
+    <include>
+      <name>demo_tree_pine_04</name>
+      <uri>model://pine_tree</uri>
+      <pose>26 46 0 0 0 0.7</pose>
+    </include>
+    </world>
+</sdf>

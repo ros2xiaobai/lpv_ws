@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>lpv_attack_sim</name>
+  <version>0.1.0</version>
+  <description>Single-UAV FDI attack trajectory-deviation simulation for PX4, ROS, and XTDrone.</description>
+
+  <maintainer email="lxx@example.com">lxx</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>gazebo_msgs</exec_depend>
+  <exec_depend>mavros_msgs</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>tf</exec_depend>
+
+  <export/>
+</package>

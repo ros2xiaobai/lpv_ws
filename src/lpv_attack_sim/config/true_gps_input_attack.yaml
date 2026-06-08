@@ -1,0 +1,38 @@
+vehicle_ns: iris_0
+rate_hz: 30.0
+gps_rate_hz: 15.0
+takeoff_height: 2.0
+warmup_time: 4.0
+pre_attack_time: 18.0
+attack_duration: 35.0
+post_attack_time: 12.0
+
+# GPS origin used to convert Gazebo local ENU-ish coordinates to WGS84.
+gps_origin:
+  lat: 47.3667
+  lon: 8.55
+  alt: 408.0
+
+# Spoofed GPS bias injected into PX4's GPS sensor input.
+# Positive x/y means the GPS measurement reports the UAV farther north/east
+# than its true Gazebo position.
+gps_spoof_offset:
+  x: 6.0
+  y: 4.0
+  z: 0.0
+
+# Slow drift added after attack starts, in m/s.
+gps_spoof_drift_rate:
+  x: 0.05
+  y: 0.0
+  z: 0.0
+
+trajectory:
+  type: circle
+  center_x: 15.0
+  center_y: 12.0
+  radius: 2.0
+  angular_rate: 0.12
+  yaw: 0.0
+
+results_dir: /home/lxx/LPV_ws/src/lpv_attack_sim/results

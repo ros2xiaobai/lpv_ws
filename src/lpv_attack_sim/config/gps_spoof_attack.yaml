@@ -1,0 +1,34 @@
+vehicle_ns: iris_0
+rate_hz: 30.0
+takeoff_height: 2.0
+warmup_time: 4.0
+pre_attack_time: 26.0  # 修改为26秒，使攻击在飞行半圆时开始（π/angular_rate ≈ 26.2s）
+attack_duration: 35.0
+post_attack_time: 12.0
+
+# Simulated GPS/localization spoofing bias injected into PX4's localization input.
+# Positive x/y means PX4 is told the UAV is farther in +x/+y than it really is.
+gps_spoof_offset:
+  x: 1.2
+  y: 0.8
+  z: 0.0
+
+# Slow drift added after attack starts, in m/s.
+gps_spoof_drift_rate:
+  x: 0.015
+  y: 0.0
+  z: 0.0
+
+# Smooth transition duration for attack onset (seconds)
+# Uses cubic polynomial to gradually ramp up from 0 to full offset
+smooth_transition_duration: 3.0
+
+trajectory:
+  type: circle
+  center_x: 15.0
+  center_y: 12.0
+  radius: 2.0
+  angular_rate: 0.12
+  yaw: 0.0
+
+results_dir: /home/lxx/LPV_ws/src/lpv_attack_sim/results

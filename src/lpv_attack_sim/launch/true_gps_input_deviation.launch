@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="gui" default="true"/>
+  <arg name="start_px4" default="true"/>
+  <arg name="run_demo" default="true"/>
+  <arg name="record_bag" default="false"/>
+  <arg name="config" default="$(find lpv_attack_sim)/config/true_gps_input_attack.yaml"/>
+  <arg name="xtdrone_launch" default="$(find lpv_attack_sim)/launch/single_iris_outdoor.launch"/>
+  <arg name="world" default="$(find lpv_attack_sim)/worlds/outdoor1_light_grass_demo.world"/>
+
+  <include if="$(arg start_px4)" file="$(arg xtdrone_launch)">
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="world" value="$(arg world)"/>
+  </include>
+
+  <node if="$(arg run_demo)"
+        pkg="lpv_attack_sim"
+        type="true_gps_input_attack_demo.py"
+        name="true_gps_input_attack_demo"
+        output="screen"
+        required="true">
+    <rosparam command="load" file="$(arg config)"/>
+  </node>
+
+  <node if="$(arg record_bag)"
+        pkg="rosbag"
+        type="record"
+        name="true_gps_input_attack_bag_record"
+        output="screen"
+        args="-O /home/lxx/LPV_ws/src/lpv_attack_sim/results/lpv_true_gps_input_attack.bag
+              /iris_0/mavros/hil/gps
+              /iris_0/mavros/gps_input/gps_input
+              /iris_0/mavros/global_position/global
+              /iris_0/mavros/global_position/raw/fix
+              /iris_0/mavros/local_position/pose
+              /iris_0/mavros/local_position/velocity_local
+              /iris_0/mavros/setpoint_position/local
+              /iris_0/mavros/state
+              /lpv_attack/nominal_setpoint
+              /lpv_attack/spoofed_gps_local
+              /lpv_attack/gps_attack_signal"/>
+</launch>

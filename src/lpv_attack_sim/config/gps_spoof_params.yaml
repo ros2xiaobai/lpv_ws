@@ -1,0 +1,62 @@
+# GPS Spoofing Attack Parameters Configuration
+
+attack:
+  # Offset applied to GPS position (in meters, ENU frame)
+  offset_x: 2.0
+  offset_y: 1.5
+  offset_z: 0.0
+
+  # Linear drift rate (m/s, cumulative over attack duration)
+  drift_x: 0.03
+  drift_y: 0.0
+  drift_z: 0.0
+
+  # Timing (seconds after takeoff)
+  start_time: 30.0
+  end_time: 65.0
+
+  # Smooth transition duration for ramp-in and ramp-out (seconds)
+  smooth_duration: 3.0
+
+  # Takeoff detection threshold (meters, world Z coordinate)
+  takeoff_z_threshold: 1.5
+
+# Trajectory configuration
+trajectory:
+  type: circle
+  center_x: 0.0
+  center_y: 0.0
+  radius: 2.0
+  angular_rate: 0.12
+  height: 2.0
+
+# Scenario presets for quick switching
+scenarios:
+  mild:
+    offset_x: 1.0
+    offset_y: 0.5
+    drift_x: 0.01
+    start_time: 30.0
+    end_time: 50.0
+
+  moderate:
+    offset_x: 2.0
+    offset_y: 1.5
+    drift_x: 0.03
+    start_time: 30.0
+    end_time: 65.0
+
+  severe:
+    offset_x: 3.5
+    offset_y: 2.5
+    drift_x: 0.05
+    start_time: 25.0
+    end_time: 70.0
+
+  asymmetric:
+    offset_x: 1.5
+    offset_y: 3.0
+    drift_x: 0.02
+    drift_y: -0.04
+    start_time: 30.0
+    end_time: 65.0

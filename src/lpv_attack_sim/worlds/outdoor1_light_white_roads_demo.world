@@ -1,0 +1,4044 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.5">
+  <world name="default">
+    <gui fullscreen="0">
+      <camera name="user_camera">
+        <pose frame="">35.008792 1.603497 6.90853 -0 0.125646 3.13697</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+    <scene>
+      <grid>0</grid>
+      <origin_visual>0</origin_visual>
+      <ambient>0.78 0.82 0.85 1</ambient>
+      <sky>
+        <clouds>
+          <speed>12</speed>
+        </clouds>
+      </sky>
+      <background>0.70 0.82 0.95 1</background>
+      <shadows>1</shadows>
+    </scene>
+    <physics name="default_physics" default="0" type="ode">
+      <gravity>0 0 -9.8066</gravity>
+      <ode>
+        <solver>
+          <type>quick</type>
+          <iters>10</iters>
+          <sor>1.3</sor>
+          <use_dynamic_moi_rescaling>0</use_dynamic_moi_rescaling>
+        </solver>
+        <constraints>
+          <cfm>0</cfm>
+          <erp>0.2</erp>
+          <contact_max_correcting_vel>100</contact_max_correcting_vel>
+          <contact_surface_layer>0.001</contact_surface_layer>
+        </constraints>
+      </ode>
+      <max_step_size>0.004</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>250</real_time_update_rate>
+      <magnetic_field>6.0e-6 2.3e-5 -4.2e-5</magnetic_field>
+    </physics>
+    <light name="sun" type="directional">
+      <pose frame="">0 0 1000 0 -0 0</pose>
+      <cast_shadows>1</cast_shadows>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.5 0.5 0.5 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.4</direction>
+    </light>
+    <model name="ground_plane">
+      <static>1</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode />
+              </torsional>
+            </friction>
+            <contact>
+              <ode />
+            </contact>
+            <bounce />
+
+          <max_contacts>10</max_contacts>
+        </collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+
+    <model name="city_terrain_1">
+      <static>1</static>
+      <link name="link">
+        <pose frame="">0 0 -5 0 -0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>500 500</size>
+            </plane>
+          </geometry>
+
+            <contact>
+              <ode>
+                <kp>1e+06</kp>
+                <kd>100</kd>
+                <max_vel>1</max_vel>
+                <min_depth>0</min_depth>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode />
+              </torsional>
+            </friction>
+            <bounce />
+
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <heightmap>
+              <use_terrain_paging>0</use_terrain_paging>
+              <texture>
+                <diffuse>model://ocean/materials/textures/soil_sand_0045_01.jpg</diffuse>
+                <normal>file://media/materials/textures/flat_normal.png</normal>
+                <size>10</size>
+              </texture>
+              <blend>
+                <min_height>0</min_height>
+                <fade_dist>1.5</fade_dist>
+              </blend>
+              <texture>
+                <diffuse>model://ocean/materials/textures/soil_sand_0045_01.jpg</diffuse>
+                <normal>file://media/materials/textures/flat_normal.png</normal>
+                <size>10</size>
+              </texture>
+              <blend>
+                <min_height>2.5</min_height>
+                <fade_dist>5</fade_dist>
+              </blend>
+              <texture>
+                <diffuse>model://city_terrain/materials/textures/forest.jpg</diffuse>
+                <normal>file://media/materials/textures/flat_normal.png</normal>
+                <size>10</size>
+              </texture>
+              <uri>model://city_terrain/materials/textures/city_terrain.jpg</uri>
+              <size>500 500 75</size>
+              <pos>40 -20 -5</pos>
+            </heightmap>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <pose frame="">0 0 0 0 -0 0</pose>
+    </model>
+    <model name="ocean_2">
+      <static>1</static>
+      <link name="ocean_link">
+        <visual name="ocean_visual1">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://ocean/mesh.dae</uri>
+              <scale>0.5 0.5 0.5</scale>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://ocean/materials/scripts/ocean.material</uri>
+              <name>Waves_GLSL</name>
+            </script>
+          </material>
+        </visual>
+        <visual name="ocean_below">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://ocean/mesh_below.dae</uri>
+              <scale>0.5 0.5 0.5</scale>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://ocean/materials/scripts/ocean.material</uri>
+              <name>Waves_GLSL</name>
+            </script>
+          </material>
+        </visual>
+        <visual name="north">
+          <pose frame="">250 0 -3.5 3.14159 -1.57079 3.14159</pose>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>7 500</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://ocean/materials/scripts/ocean.material</uri>
+              <name>Seabox</name>
+            </script>
+          </material>
+        </visual>
+        <visual name="south">
+          <pose frame="">-250 0 -3.5 3.14159 1.57079 3.14159</pose>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>7 500</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://ocean/materials/scripts/ocean.material</uri>
+              <name>Seabox</name>
+            </script>
+          </material>
+        </visual>
+        <visual name="west">
+          <pose frame="">0 250 -3.5 1.5708 -0 0</pose>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>500 7</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://ocean/materials/scripts/ocean.material</uri>
+              <name>Seabox</name>
+            </script>
+          </material>
+        </visual>
+        <visual name="east">
+          <pose frame="">0 -250 -3.5 -1.5708 0 0</pose>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>500 7</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://ocean/materials/scripts/ocean.material</uri>
+              <name>Seabox</name>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <pose frame="">40 -20 -2 0 -0 0</pose>
+    </model>
+    <road name="road_y_1">
+      <width>7.4</width>
+      <point>-45 -48.7 0.01</point>
+      <point>-45 49.2 0.01</point>
+    <material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name></script></material></road>
+    <road name="road_y_2">
+      <width>7.4</width>
+      <point>-15 -48.7 0.01</point>
+      <point>-15 49.2 0.01</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name></script>
+      </material>
+    </road>
+    <road name="road_y_3">
+      <width>7.4</width>
+      <point>45 -48.7 0.01</point>
+      <point>45 49.2 0.01</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name></script>
+      </material>
+    </road>
+    <road name="road_y_4">
+      <width>7.4</width>
+      <point>110 -48.7 0.01</point>
+      <point>110 49.2 0.01</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name></script>
+      </material>
+    </road>
+    <road name="road_y_5">
+      <width>7.4</width>
+      <point>120 -48.7 0.01</point>
+      <point>120 49.2 0.01</point>
+    <material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name></script></material></road>
+    <road name="road_x_1">
+      <width>8.4</width>
+      <point>-41.3 -45 0.015</point>
+      <point>116.3 -45 0.015</point>
+    <material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name></script></material></road>
+    <road name="road_x_2">
+      <width>8.4</width>
+      <point>-41.3 0 0.015</point>
+      <point>116.3 0 0.015</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name></script>
+      </material>
+    </road>
+    <road name="road_x_3">
+      <width>8.4</width>
+      <point>-41.3 45 0.015</point>
+      <point>116.3 45 0.015</point>
+    <material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name></script></material></road>
+    <model name="sidewalk_3">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>-41.3 -40.8</point>
+              <point>-41.2755 -40.9545</point>
+              <point>-41.2045 -41.0939</point>
+              <point>-41.0939 -41.2045</point>
+              <point>-40.9545 -41.2755</point>
+              <point>-40.8 -41.3</point>
+              <point>-19.2 -41.3</point>
+              <point>-19.0455 -41.2755</point>
+              <point>-18.9061 -41.2045</point>
+              <point>-18.7955 -41.0939</point>
+              <point>-18.7245 -40.9545</point>
+              <point>-18.7 -40.8</point>
+              <point>-18.7 -38.8</point>
+              <point>-18.7245 -38.6455</point>
+              <point>-18.7955 -38.5061</point>
+              <point>-18.9061 -38.3955</point>
+              <point>-19.0455 -38.3245</point>
+              <point>-19.2 -38.3</point>
+              <point>-40.8 -38.3</point>
+              <point>-40.9545 -38.3245</point>
+              <point>-41.0939 -38.3955</point>
+              <point>-41.2045 -38.5061</point>
+              <point>-41.2755 -38.6455</point>
+              <point>-41.3 -38.8</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>-41.3 -40.8</point>
+              <point>-41.2755 -40.9545</point>
+              <point>-41.2045 -41.0939</point>
+              <point>-41.0939 -41.2045</point>
+              <point>-40.9545 -41.2755</point>
+              <point>-40.8 -41.3</point>
+              <point>-19.2 -41.3</point>
+              <point>-19.0455 -41.2755</point>
+              <point>-18.9061 -41.2045</point>
+              <point>-18.7955 -41.0939</point>
+              <point>-18.7245 -40.9545</point>
+              <point>-18.7 -40.8</point>
+              <point>-18.7 -38.8</point>
+              <point>-18.7245 -38.6455</point>
+              <point>-18.7955 -38.5061</point>
+              <point>-18.9061 -38.3955</point>
+              <point>-19.0455 -38.3245</point>
+              <point>-19.2 -38.3</point>
+              <point>-40.8 -38.3</point>
+              <point>-40.9545 -38.3245</point>
+              <point>-41.0939 -38.3955</point>
+              <point>-41.2045 -38.5061</point>
+              <point>-41.2755 -38.6455</point>
+              <point>-41.3 -38.8</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_4">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>-41.3 -6.2</point>
+              <point>-41.2755 -6.35451</point>
+              <point>-41.2045 -6.49389</point>
+              <point>-41.0939 -6.60451</point>
+              <point>-40.9545 -6.67553</point>
+              <point>-40.8 -6.7</point>
+              <point>-19.2 -6.7</point>
+              <point>-19.0455 -6.67553</point>
+              <point>-18.9061 -6.60451</point>
+              <point>-18.7955 -6.49389</point>
+              <point>-18.7245 -6.35451</point>
+              <point>-18.7 -6.2</point>
+              <point>-18.7 -4.2</point>
+              <point>-18.7245 -4.04549</point>
+              <point>-18.7955 -3.90611</point>
+              <point>-18.9061 -3.79549</point>
+              <point>-19.0455 -3.72447</point>
+              <point>-19.2 -3.7</point>
+              <point>-40.8 -3.7</point>
+              <point>-40.9545 -3.72447</point>
+              <point>-41.0939 -3.79549</point>
+              <point>-41.2045 -3.90611</point>
+              <point>-41.2755 -4.04549</point>
+              <point>-41.3 -4.2</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>-41.3 -6.2</point>
+              <point>-41.2755 -6.35451</point>
+              <point>-41.2045 -6.49389</point>
+              <point>-41.0939 -6.60451</point>
+              <point>-40.9545 -6.67553</point>
+              <point>-40.8 -6.7</point>
+              <point>-19.2 -6.7</point>
+              <point>-19.0455 -6.67553</point>
+              <point>-18.9061 -6.60451</point>
+              <point>-18.7955 -6.49389</point>
+              <point>-18.7245 -6.35451</point>
+              <point>-18.7 -6.2</point>
+              <point>-18.7 -4.2</point>
+              <point>-18.7245 -4.04549</point>
+              <point>-18.7955 -3.90611</point>
+              <point>-18.9061 -3.79549</point>
+              <point>-19.0455 -3.72447</point>
+              <point>-19.2 -3.7</point>
+              <point>-40.8 -3.7</point>
+              <point>-40.9545 -3.72447</point>
+              <point>-41.0939 -3.79549</point>
+              <point>-41.2045 -3.90611</point>
+              <point>-41.2755 -4.04549</point>
+              <point>-41.3 -4.2</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_5">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>-41.3 -40.8</point>
+              <point>-41.2755 -40.9545</point>
+              <point>-41.2045 -41.0939</point>
+              <point>-41.0939 -41.2045</point>
+              <point>-40.9545 -41.2755</point>
+              <point>-40.8 -41.3</point>
+              <point>-38.8 -41.3</point>
+              <point>-38.6455 -41.2755</point>
+              <point>-38.5061 -41.2045</point>
+              <point>-38.3955 -41.0939</point>
+              <point>-38.3245 -40.9545</point>
+              <point>-38.3 -40.8</point>
+              <point>-38.3 -4.2</point>
+              <point>-38.3245 -4.04549</point>
+              <point>-38.3955 -3.90611</point>
+              <point>-38.5061 -3.79549</point>
+              <point>-38.6455 -3.72447</point>
+              <point>-38.8 -3.7</point>
+              <point>-40.8 -3.7</point>
+              <point>-40.9545 -3.72447</point>
+              <point>-41.0939 -3.79549</point>
+              <point>-41.2045 -3.90611</point>
+              <point>-41.2755 -4.04549</point>
+              <point>-41.3 -4.2</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>-41.3 -40.8</point>
+              <point>-41.2755 -40.9545</point>
+              <point>-41.2045 -41.0939</point>
+              <point>-41.0939 -41.2045</point>
+              <point>-40.9545 -41.2755</point>
+              <point>-40.8 -41.3</point>
+              <point>-38.8 -41.3</point>
+              <point>-38.6455 -41.2755</point>
+              <point>-38.5061 -41.2045</point>
+              <point>-38.3955 -41.0939</point>
+              <point>-38.3245 -40.9545</point>
+              <point>-38.3 -40.8</point>
+              <point>-38.3 -4.2</point>
+              <point>-38.3245 -4.04549</point>
+              <point>-38.3955 -3.90611</point>
+              <point>-38.5061 -3.79549</point>
+              <point>-38.6455 -3.72447</point>
+              <point>-38.8 -3.7</point>
+              <point>-40.8 -3.7</point>
+              <point>-40.9545 -3.72447</point>
+              <point>-41.0939 -3.79549</point>
+              <point>-41.2045 -3.90611</point>
+              <point>-41.2755 -4.04549</point>
+              <point>-41.3 -4.2</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_6">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>-21.7 -40.8</point>
+              <point>-21.6755 -40.9545</point>
+              <point>-21.6045 -41.0939</point>
+              <point>-21.4939 -41.2045</point>
+              <point>-21.3545 -41.2755</point>
+              <point>-21.2 -41.3</point>
+              <point>-19.2 -41.3</point>
+              <point>-19.0455 -41.2755</point>
+              <point>-18.9061 -41.2045</point>
+              <point>-18.7955 -41.0939</point>
+              <point>-18.7245 -40.9545</point>
+              <point>-18.7 -40.8</point>
+              <point>-18.7 -4.2</point>
+              <point>-18.7245 -4.04549</point>
+              <point>-18.7955 -3.90611</point>
+              <point>-18.9061 -3.79549</point>
+              <point>-19.0455 -3.72447</point>
+              <point>-19.2 -3.7</point>
+              <point>-21.2 -3.7</point>
+              <point>-21.3545 -3.72447</point>
+              <point>-21.4939 -3.79549</point>
+              <point>-21.6045 -3.90611</point>
+              <point>-21.6755 -4.04549</point>
+              <point>-21.7 -4.2</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>-21.7 -40.8</point>
+              <point>-21.6755 -40.9545</point>
+              <point>-21.6045 -41.0939</point>
+              <point>-21.4939 -41.2045</point>
+              <point>-21.3545 -41.2755</point>
+              <point>-21.2 -41.3</point>
+              <point>-19.2 -41.3</point>
+              <point>-19.0455 -41.2755</point>
+              <point>-18.9061 -41.2045</point>
+              <point>-18.7955 -41.0939</point>
+              <point>-18.7245 -40.9545</point>
+              <point>-18.7 -40.8</point>
+              <point>-18.7 -4.2</point>
+              <point>-18.7245 -4.04549</point>
+              <point>-18.7955 -3.90611</point>
+              <point>-18.9061 -3.79549</point>
+              <point>-19.0455 -3.72447</point>
+              <point>-19.2 -3.7</point>
+              <point>-21.2 -3.7</point>
+              <point>-21.3545 -3.72447</point>
+              <point>-21.4939 -3.79549</point>
+              <point>-21.6045 -3.90611</point>
+              <point>-21.6755 -4.04549</point>
+              <point>-21.7 -4.2</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_7">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>-41.3 4.2</point>
+              <point>-41.2755 4.04549</point>
+              <point>-41.2045 3.90611</point>
+              <point>-41.0939 3.79549</point>
+              <point>-40.9545 3.72447</point>
+              <point>-40.8 3.7</point>
+              <point>-19.2 3.7</point>
+              <point>-19.0455 3.72447</point>
+              <point>-18.9061 3.79549</point>
+              <point>-18.7955 3.90611</point>
+              <point>-18.7245 4.04549</point>
+              <point>-18.7 4.2</point>
+              <point>-18.7 6.2</point>
+              <point>-18.7245 6.35451</point>
+              <point>-18.7955 6.49389</point>
+              <point>-18.9061 6.60451</point>
+              <point>-19.0455 6.67553</point>
+              <point>-19.2 6.7</point>
+              <point>-40.8 6.7</point>
+              <point>-40.9545 6.67553</point>
+              <point>-41.0939 6.60451</point>
+              <point>-41.2045 6.49389</point>
+              <point>-41.2755 6.35451</point>
+              <point>-41.3 6.2</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>-41.3 4.2</point>
+              <point>-41.2755 4.04549</point>
+              <point>-41.2045 3.90611</point>
+              <point>-41.0939 3.79549</point>
+              <point>-40.9545 3.72447</point>
+              <point>-40.8 3.7</point>
+              <point>-19.2 3.7</point>
+              <point>-19.0455 3.72447</point>
+              <point>-18.9061 3.79549</point>
+              <point>-18.7955 3.90611</point>
+              <point>-18.7245 4.04549</point>
+              <point>-18.7 4.2</point>
+              <point>-18.7 6.2</point>
+              <point>-18.7245 6.35451</point>
+              <point>-18.7955 6.49389</point>
+              <point>-18.9061 6.60451</point>
+              <point>-19.0455 6.67553</point>
+              <point>-19.2 6.7</point>
+              <point>-40.8 6.7</point>
+              <point>-40.9545 6.67553</point>
+              <point>-41.0939 6.60451</point>
+              <point>-41.2045 6.49389</point>
+              <point>-41.2755 6.35451</point>
+              <point>-41.3 6.2</point>
+            </polyline>
+          </geometry>
+          <max_contacts>10</max_contacts>
+
+            <contact>
+              <ode />
+            </contact>
+            <bounce />
+            <friction>
+              <torsional>
+                <ode />
+              </torsional>
+              <ode />
+            </friction>
+
+        </collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_8">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>-41.3 38.8</point>
+              <point>-41.2755 38.6455</point>
+              <point>-41.2045 38.5061</point>
+              <point>-41.0939 38.3955</point>
+              <point>-40.9545 38.3245</point>
+              <point>-40.8 38.3</point>
+              <point>-19.2 38.3</point>
+              <point>-19.0455 38.3245</point>
+              <point>-18.9061 38.3955</point>
+              <point>-18.7955 38.5061</point>
+              <point>-18.7245 38.6455</point>
+              <point>-18.7 38.8</point>
+              <point>-18.7 40.8</point>
+              <point>-18.7245 40.9545</point>
+              <point>-18.7955 41.0939</point>
+              <point>-18.9061 41.2045</point>
+              <point>-19.0455 41.2755</point>
+              <point>-19.2 41.3</point>
+              <point>-40.8 41.3</point>
+              <point>-40.9545 41.2755</point>
+              <point>-41.0939 41.2045</point>
+              <point>-41.2045 41.0939</point>
+              <point>-41.2755 40.9545</point>
+              <point>-41.3 40.8</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>-41.3 38.8</point>
+              <point>-41.2755 38.6455</point>
+              <point>-41.2045 38.5061</point>
+              <point>-41.0939 38.3955</point>
+              <point>-40.9545 38.3245</point>
+              <point>-40.8 38.3</point>
+              <point>-19.2 38.3</point>
+              <point>-19.0455 38.3245</point>
+              <point>-18.9061 38.3955</point>
+              <point>-18.7955 38.5061</point>
+              <point>-18.7245 38.6455</point>
+              <point>-18.7 38.8</point>
+              <point>-18.7 40.8</point>
+              <point>-18.7245 40.9545</point>
+              <point>-18.7955 41.0939</point>
+              <point>-18.9061 41.2045</point>
+              <point>-19.0455 41.2755</point>
+              <point>-19.2 41.3</point>
+              <point>-40.8 41.3</point>
+              <point>-40.9545 41.2755</point>
+              <point>-41.0939 41.2045</point>
+              <point>-41.2045 41.0939</point>
+              <point>-41.2755 40.9545</point>
+              <point>-41.3 40.8</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_9">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>-41.3 4.2</point>
+              <point>-41.2755 4.04549</point>
+              <point>-41.2045 3.90611</point>
+              <point>-41.0939 3.79549</point>
+              <point>-40.9545 3.72447</point>
+              <point>-40.8 3.7</point>
+              <point>-38.8 3.7</point>
+              <point>-38.6455 3.72447</point>
+              <point>-38.5061 3.79549</point>
+              <point>-38.3955 3.90611</point>
+              <point>-38.3245 4.04549</point>
+              <point>-38.3 4.2</point>
+              <point>-38.3 40.8</point>
+              <point>-38.3245 40.9545</point>
+              <point>-38.3955 41.0939</point>
+              <point>-38.5061 41.2045</point>
+              <point>-38.6455 41.2755</point>
+              <point>-38.8 41.3</point>
+              <point>-40.8 41.3</point>
+              <point>-40.9545 41.2755</point>
+              <point>-41.0939 41.2045</point>
+              <point>-41.2045 41.0939</point>
+              <point>-41.2755 40.9545</point>
+              <point>-41.3 40.8</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>-41.3 4.2</point>
+              <point>-41.2755 4.04549</point>
+              <point>-41.2045 3.90611</point>
+              <point>-41.0939 3.79549</point>
+              <point>-40.9545 3.72447</point>
+              <point>-40.8 3.7</point>
+              <point>-38.8 3.7</point>
+              <point>-38.6455 3.72447</point>
+              <point>-38.5061 3.79549</point>
+              <point>-38.3955 3.90611</point>
+              <point>-38.3245 4.04549</point>
+              <point>-38.3 4.2</point>
+              <point>-38.3 40.8</point>
+              <point>-38.3245 40.9545</point>
+              <point>-38.3955 41.0939</point>
+              <point>-38.5061 41.2045</point>
+              <point>-38.6455 41.2755</point>
+              <point>-38.8 41.3</point>
+              <point>-40.8 41.3</point>
+              <point>-40.9545 41.2755</point>
+              <point>-41.0939 41.2045</point>
+              <point>-41.2045 41.0939</point>
+              <point>-41.2755 40.9545</point>
+              <point>-41.3 40.8</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_10">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>-21.7 4.2</point>
+              <point>-21.6755 4.04549</point>
+              <point>-21.6045 3.90611</point>
+              <point>-21.4939 3.79549</point>
+              <point>-21.3545 3.72447</point>
+              <point>-21.2 3.7</point>
+              <point>-19.2 3.7</point>
+              <point>-19.0455 3.72447</point>
+              <point>-18.9061 3.79549</point>
+              <point>-18.7955 3.90611</point>
+              <point>-18.7245 4.04549</point>
+              <point>-18.7 4.2</point>
+              <point>-18.7 40.8</point>
+              <point>-18.7245 40.9545</point>
+              <point>-18.7955 41.0939</point>
+              <point>-18.9061 41.2045</point>
+              <point>-19.0455 41.2755</point>
+              <point>-19.2 41.3</point>
+              <point>-21.2 41.3</point>
+              <point>-21.3545 41.2755</point>
+              <point>-21.4939 41.2045</point>
+              <point>-21.6045 41.0939</point>
+              <point>-21.6755 40.9545</point>
+              <point>-21.7 40.8</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>-21.7 4.2</point>
+              <point>-21.6755 4.04549</point>
+              <point>-21.6045 3.90611</point>
+              <point>-21.4939 3.79549</point>
+              <point>-21.3545 3.72447</point>
+              <point>-21.2 3.7</point>
+              <point>-19.2 3.7</point>
+              <point>-19.0455 3.72447</point>
+              <point>-18.9061 3.79549</point>
+              <point>-18.7955 3.90611</point>
+              <point>-18.7245 4.04549</point>
+              <point>-18.7 4.2</point>
+              <point>-18.7 40.8</point>
+              <point>-18.7245 40.9545</point>
+              <point>-18.7955 41.0939</point>
+              <point>-18.9061 41.2045</point>
+              <point>-19.0455 41.2755</point>
+              <point>-19.2 41.3</point>
+              <point>-21.2 41.3</point>
+              <point>-21.3545 41.2755</point>
+              <point>-21.4939 41.2045</point>
+              <point>-21.6045 41.0939</point>
+              <point>-21.6755 40.9545</point>
+              <point>-21.7 40.8</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_11">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>-11.3 -40.8</point>
+              <point>-11.2755 -40.9545</point>
+              <point>-11.2045 -41.0939</point>
+              <point>-11.0939 -41.2045</point>
+              <point>-10.9545 -41.2755</point>
+              <point>-10.8 -41.3</point>
+              <point>40.8 -41.3</point>
+              <point>40.9545 -41.2755</point>
+              <point>41.0939 -41.2045</point>
+              <point>41.2045 -41.0939</point>
+              <point>41.2755 -40.9545</point>
+              <point>41.3 -40.8</point>
+              <point>41.3 -38.8</point>
+              <point>41.2755 -38.6455</point>
+              <point>41.2045 -38.5061</point>
+              <point>41.0939 -38.3955</point>
+              <point>40.9545 -38.3245</point>
+              <point>40.8 -38.3</point>
+              <point>-10.8 -38.3</point>
+              <point>-10.9545 -38.3245</point>
+              <point>-11.0939 -38.3955</point>
+              <point>-11.2045 -38.5061</point>
+              <point>-11.2755 -38.6455</point>
+              <point>-11.3 -38.8</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>-11.3 -40.8</point>
+              <point>-11.2755 -40.9545</point>
+              <point>-11.2045 -41.0939</point>
+              <point>-11.0939 -41.2045</point>
+              <point>-10.9545 -41.2755</point>
+              <point>-10.8 -41.3</point>
+              <point>40.8 -41.3</point>
+              <point>40.9545 -41.2755</point>
+              <point>41.0939 -41.2045</point>
+              <point>41.2045 -41.0939</point>
+              <point>41.2755 -40.9545</point>
+              <point>41.3 -40.8</point>
+              <point>41.3 -38.8</point>
+              <point>41.2755 -38.6455</point>
+              <point>41.2045 -38.5061</point>
+              <point>41.0939 -38.3955</point>
+              <point>40.9545 -38.3245</point>
+              <point>40.8 -38.3</point>
+              <point>-10.8 -38.3</point>
+              <point>-10.9545 -38.3245</point>
+              <point>-11.0939 -38.3955</point>
+              <point>-11.2045 -38.5061</point>
+              <point>-11.2755 -38.6455</point>
+              <point>-11.3 -38.8</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_12">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>-11.3 -6.2</point>
+              <point>-11.2755 -6.35451</point>
+              <point>-11.2045 -6.49389</point>
+              <point>-11.0939 -6.60451</point>
+              <point>-10.9545 -6.67553</point>
+              <point>-10.8 -6.7</point>
+              <point>40.8 -6.7</point>
+              <point>40.9545 -6.67553</point>
+              <point>41.0939 -6.60451</point>
+              <point>41.2045 -6.49389</point>
+              <point>41.2755 -6.35451</point>
+              <point>41.3 -6.2</point>
+              <point>41.3 -4.2</point>
+              <point>41.2755 -4.04549</point>
+              <point>41.2045 -3.90611</point>
+              <point>41.0939 -3.79549</point>
+              <point>40.9545 -3.72447</point>
+              <point>40.8 -3.7</point>
+              <point>-10.8 -3.7</point>
+              <point>-10.9545 -3.72447</point>
+              <point>-11.0939 -3.79549</point>
+              <point>-11.2045 -3.90611</point>
+              <point>-11.2755 -4.04549</point>
+              <point>-11.3 -4.2</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>-11.3 -6.2</point>
+              <point>-11.2755 -6.35451</point>
+              <point>-11.2045 -6.49389</point>
+              <point>-11.0939 -6.60451</point>
+              <point>-10.9545 -6.67553</point>
+              <point>-10.8 -6.7</point>
+              <point>40.8 -6.7</point>
+              <point>40.9545 -6.67553</point>
+              <point>41.0939 -6.60451</point>
+              <point>41.2045 -6.49389</point>
+              <point>41.2755 -6.35451</point>
+              <point>41.3 -6.2</point>
+              <point>41.3 -4.2</point>
+              <point>41.2755 -4.04549</point>
+              <point>41.2045 -3.90611</point>
+              <point>41.0939 -3.79549</point>
+              <point>40.9545 -3.72447</point>
+              <point>40.8 -3.7</point>
+              <point>-10.8 -3.7</point>
+              <point>-10.9545 -3.72447</point>
+              <point>-11.0939 -3.79549</point>
+              <point>-11.2045 -3.90611</point>
+              <point>-11.2755 -4.04549</point>
+              <point>-11.3 -4.2</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_13">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>-11.3 -40.8</point>
+              <point>-11.2755 -40.9545</point>
+              <point>-11.2045 -41.0939</point>
+              <point>-11.0939 -41.2045</point>
+              <point>-10.9545 -41.2755</point>
+              <point>-10.8 -41.3</point>
+              <point>-8.8 -41.3</point>
+              <point>-8.64549 -41.2755</point>
+              <point>-8.50611 -41.2045</point>
+              <point>-8.39549 -41.0939</point>
+              <point>-8.32447 -40.9545</point>
+              <point>-8.3 -40.8</point>
+              <point>-8.3 -16.5</point>
+              <point>-8.32447 -16.3455</point>
+              <point>-8.39549 -16.2061</point>
+              <point>-8.50611 -16.0955</point>
+              <point>-8.64549 -16.0245</point>
+              <point>-8.8 -16</point>
+              <point>-10.8 -16</point>
+              <point>-10.9545 -16.0245</point>
+              <point>-11.0939 -16.0955</point>
+              <point>-11.2045 -16.2061</point>
+              <point>-11.2755 -16.3455</point>
+              <point>-11.3 -16.5</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>-11.3 -40.8</point>
+              <point>-11.2755 -40.9545</point>
+              <point>-11.2045 -41.0939</point>
+              <point>-11.0939 -41.2045</point>
+              <point>-10.9545 -41.2755</point>
+              <point>-10.8 -41.3</point>
+              <point>-8.8 -41.3</point>
+              <point>-8.64549 -41.2755</point>
+              <point>-8.50611 -41.2045</point>
+              <point>-8.39549 -41.0939</point>
+              <point>-8.32447 -40.9545</point>
+              <point>-8.3 -40.8</point>
+              <point>-8.3 -16.5</point>
+              <point>-8.32447 -16.3455</point>
+              <point>-8.39549 -16.2061</point>
+              <point>-8.50611 -16.0955</point>
+              <point>-8.64549 -16.0245</point>
+              <point>-8.8 -16</point>
+              <point>-10.8 -16</point>
+              <point>-10.9545 -16.0245</point>
+              <point>-11.0939 -16.0955</point>
+              <point>-11.2045 -16.2061</point>
+              <point>-11.2755 -16.3455</point>
+              <point>-11.3 -16.5</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_14">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>-11.3 -9.5</point>
+              <point>-11.2755 -9.65451</point>
+              <point>-11.2045 -9.79389</point>
+              <point>-11.0939 -9.90451</point>
+              <point>-10.9545 -9.97553</point>
+              <point>-10.8 -10</point>
+              <point>-8.8 -10</point>
+              <point>-8.64549 -9.97553</point>
+              <point>-8.50611 -9.90451</point>
+              <point>-8.39549 -9.79389</point>
+              <point>-8.32447 -9.65451</point>
+              <point>-8.3 -9.5</point>
+              <point>-8.3 -4.2</point>
+              <point>-8.32447 -4.04549</point>
+              <point>-8.39549 -3.90611</point>
+              <point>-8.50611 -3.79549</point>
+              <point>-8.64549 -3.72447</point>
+              <point>-8.8 -3.7</point>
+              <point>-10.8 -3.7</point>
+              <point>-10.9545 -3.72447</point>
+              <point>-11.0939 -3.79549</point>
+              <point>-11.2045 -3.90611</point>
+              <point>-11.2755 -4.04549</point>
+              <point>-11.3 -4.2</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>-11.3 -9.5</point>
+              <point>-11.2755 -9.65451</point>
+              <point>-11.2045 -9.79389</point>
+              <point>-11.0939 -9.90451</point>
+              <point>-10.9545 -9.97553</point>
+              <point>-10.8 -10</point>
+              <point>-8.8 -10</point>
+              <point>-8.64549 -9.97553</point>
+              <point>-8.50611 -9.90451</point>
+              <point>-8.39549 -9.79389</point>
+              <point>-8.32447 -9.65451</point>
+              <point>-8.3 -9.5</point>
+              <point>-8.3 -4.2</point>
+              <point>-8.32447 -4.04549</point>
+              <point>-8.39549 -3.90611</point>
+              <point>-8.50611 -3.79549</point>
+              <point>-8.64549 -3.72447</point>
+              <point>-8.8 -3.7</point>
+              <point>-10.8 -3.7</point>
+              <point>-10.9545 -3.72447</point>
+              <point>-11.0939 -3.79549</point>
+              <point>-11.2045 -3.90611</point>
+              <point>-11.2755 -4.04549</point>
+              <point>-11.3 -4.2</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_15">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>38.3 -40.8</point>
+              <point>38.3245 -40.9545</point>
+              <point>38.3955 -41.0939</point>
+              <point>38.5061 -41.2045</point>
+              <point>38.6455 -41.2755</point>
+              <point>38.8 -41.3</point>
+              <point>40.8 -41.3</point>
+              <point>40.9545 -41.2755</point>
+              <point>41.0939 -41.2045</point>
+              <point>41.2045 -41.0939</point>
+              <point>41.2755 -40.9545</point>
+              <point>41.3 -40.8</point>
+              <point>41.3 -4.2</point>
+              <point>41.2755 -4.04549</point>
+              <point>41.2045 -3.90611</point>
+              <point>41.0939 -3.79549</point>
+              <point>40.9545 -3.72447</point>
+              <point>40.8 -3.7</point>
+              <point>38.8 -3.7</point>
+              <point>38.6455 -3.72447</point>
+              <point>38.5061 -3.79549</point>
+              <point>38.3955 -3.90611</point>
+              <point>38.3245 -4.04549</point>
+              <point>38.3 -4.2</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>38.3 -40.8</point>
+              <point>38.3245 -40.9545</point>
+              <point>38.3955 -41.0939</point>
+              <point>38.5061 -41.2045</point>
+              <point>38.6455 -41.2755</point>
+              <point>38.8 -41.3</point>
+              <point>40.8 -41.3</point>
+              <point>40.9545 -41.2755</point>
+              <point>41.0939 -41.2045</point>
+              <point>41.2045 -41.0939</point>
+              <point>41.2755 -40.9545</point>
+              <point>41.3 -40.8</point>
+              <point>41.3 -4.2</point>
+              <point>41.2755 -4.04549</point>
+              <point>41.2045 -3.90611</point>
+              <point>41.0939 -3.79549</point>
+              <point>40.9545 -3.72447</point>
+              <point>40.8 -3.7</point>
+              <point>38.8 -3.7</point>
+              <point>38.6455 -3.72447</point>
+              <point>38.5061 -3.79549</point>
+              <point>38.3955 -3.90611</point>
+              <point>38.3245 -4.04549</point>
+              <point>38.3 -4.2</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_16">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>-11.3 4.2</point>
+              <point>-11.2755 4.04549</point>
+              <point>-11.2045 3.90611</point>
+              <point>-11.0939 3.79549</point>
+              <point>-10.9545 3.72447</point>
+              <point>-10.8 3.7</point>
+              <point>40.8 3.7</point>
+              <point>40.9545 3.72447</point>
+              <point>41.0939 3.79549</point>
+              <point>41.2045 3.90611</point>
+              <point>41.2755 4.04549</point>
+              <point>41.3 4.2</point>
+              <point>41.3 6.2</point>
+              <point>41.2755 6.35451</point>
+              <point>41.2045 6.49389</point>
+              <point>41.0939 6.60451</point>
+              <point>40.9545 6.67553</point>
+              <point>40.8 6.7</point>
+              <point>-10.8 6.7</point>
+              <point>-10.9545 6.67553</point>
+              <point>-11.0939 6.60451</point>
+              <point>-11.2045 6.49389</point>
+              <point>-11.2755 6.35451</point>
+              <point>-11.3 6.2</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>-11.3 4.2</point>
+              <point>-11.2755 4.04549</point>
+              <point>-11.2045 3.90611</point>
+              <point>-11.0939 3.79549</point>
+              <point>-10.9545 3.72447</point>
+              <point>-10.8 3.7</point>
+              <point>40.8 3.7</point>
+              <point>40.9545 3.72447</point>
+              <point>41.0939 3.79549</point>
+              <point>41.2045 3.90611</point>
+              <point>41.2755 4.04549</point>
+              <point>41.3 4.2</point>
+              <point>41.3 6.2</point>
+              <point>41.2755 6.35451</point>
+              <point>41.2045 6.49389</point>
+              <point>41.0939 6.60451</point>
+              <point>40.9545 6.67553</point>
+              <point>40.8 6.7</point>
+              <point>-10.8 6.7</point>
+              <point>-10.9545 6.67553</point>
+              <point>-11.0939 6.60451</point>
+              <point>-11.2045 6.49389</point>
+              <point>-11.2755 6.35451</point>
+              <point>-11.3 6.2</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_17">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>-11.3 38.8</point>
+              <point>-11.2755 38.6455</point>
+              <point>-11.2045 38.5061</point>
+              <point>-11.0939 38.3955</point>
+              <point>-10.9545 38.3245</point>
+              <point>-10.8 38.3</point>
+              <point>40.8 38.3</point>
+              <point>40.9545 38.3245</point>
+              <point>41.0939 38.3955</point>
+              <point>41.2045 38.5061</point>
+              <point>41.2755 38.6455</point>
+              <point>41.3 38.8</point>
+              <point>41.3 40.8</point>
+              <point>41.2755 40.9545</point>
+              <point>41.2045 41.0939</point>
+              <point>41.0939 41.2045</point>
+              <point>40.9545 41.2755</point>
+              <point>40.8 41.3</point>
+              <point>-10.8 41.3</point>
+              <point>-10.9545 41.2755</point>
+              <point>-11.0939 41.2045</point>
+              <point>-11.2045 41.0939</point>
+              <point>-11.2755 40.9545</point>
+              <point>-11.3 40.8</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>-11.3 38.8</point>
+              <point>-11.2755 38.6455</point>
+              <point>-11.2045 38.5061</point>
+              <point>-11.0939 38.3955</point>
+              <point>-10.9545 38.3245</point>
+              <point>-10.8 38.3</point>
+              <point>40.8 38.3</point>
+              <point>40.9545 38.3245</point>
+              <point>41.0939 38.3955</point>
+              <point>41.2045 38.5061</point>
+              <point>41.2755 38.6455</point>
+              <point>41.3 38.8</point>
+              <point>41.3 40.8</point>
+              <point>41.2755 40.9545</point>
+              <point>41.2045 41.0939</point>
+              <point>41.0939 41.2045</point>
+              <point>40.9545 41.2755</point>
+              <point>40.8 41.3</point>
+              <point>-10.8 41.3</point>
+              <point>-10.9545 41.2755</point>
+              <point>-11.0939 41.2045</point>
+              <point>-11.2045 41.0939</point>
+              <point>-11.2755 40.9545</point>
+              <point>-11.3 40.8</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_18">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>-11.3 4.2</point>
+              <point>-11.2755 4.04549</point>
+              <point>-11.2045 3.90611</point>
+              <point>-11.0939 3.79549</point>
+              <point>-10.9545 3.72447</point>
+              <point>-10.8 3.7</point>
+              <point>-8.8 3.7</point>
+              <point>-8.64549 3.72447</point>
+              <point>-8.50611 3.79549</point>
+              <point>-8.39549 3.90611</point>
+              <point>-8.32447 4.04549</point>
+              <point>-8.3 4.2</point>
+              <point>-8.3 40.8</point>
+              <point>-8.32447 40.9545</point>
+              <point>-8.39549 41.0939</point>
+              <point>-8.50611 41.2045</point>
+              <point>-8.64549 41.2755</point>
+              <point>-8.8 41.3</point>
+              <point>-10.8 41.3</point>
+              <point>-10.9545 41.2755</point>
+              <point>-11.0939 41.2045</point>
+              <point>-11.2045 41.0939</point>
+              <point>-11.2755 40.9545</point>
+              <point>-11.3 40.8</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>-11.3 4.2</point>
+              <point>-11.2755 4.04549</point>
+              <point>-11.2045 3.90611</point>
+              <point>-11.0939 3.79549</point>
+              <point>-10.9545 3.72447</point>
+              <point>-10.8 3.7</point>
+              <point>-8.8 3.7</point>
+              <point>-8.64549 3.72447</point>
+              <point>-8.50611 3.79549</point>
+              <point>-8.39549 3.90611</point>
+              <point>-8.32447 4.04549</point>
+              <point>-8.3 4.2</point>
+              <point>-8.3 40.8</point>
+              <point>-8.32447 40.9545</point>
+              <point>-8.39549 41.0939</point>
+              <point>-8.50611 41.2045</point>
+              <point>-8.64549 41.2755</point>
+              <point>-8.8 41.3</point>
+              <point>-10.8 41.3</point>
+              <point>-10.9545 41.2755</point>
+              <point>-11.0939 41.2045</point>
+              <point>-11.2045 41.0939</point>
+              <point>-11.2755 40.9545</point>
+              <point>-11.3 40.8</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_19">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>38.3 4.2</point>
+              <point>38.3245 4.04549</point>
+              <point>38.3955 3.90611</point>
+              <point>38.5061 3.79549</point>
+              <point>38.6455 3.72447</point>
+              <point>38.8 3.7</point>
+              <point>40.8 3.7</point>
+              <point>40.9545 3.72447</point>
+              <point>41.0939 3.79549</point>
+              <point>41.2045 3.90611</point>
+              <point>41.2755 4.04549</point>
+              <point>41.3 4.2</point>
+              <point>41.3 40.8</point>
+              <point>41.2755 40.9545</point>
+              <point>41.2045 41.0939</point>
+              <point>41.0939 41.2045</point>
+              <point>40.9545 41.2755</point>
+              <point>40.8 41.3</point>
+              <point>38.8 41.3</point>
+              <point>38.6455 41.2755</point>
+              <point>38.5061 41.2045</point>
+              <point>38.3955 41.0939</point>
+              <point>38.3245 40.9545</point>
+              <point>38.3 40.8</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>38.3 4.2</point>
+              <point>38.3245 4.04549</point>
+              <point>38.3955 3.90611</point>
+              <point>38.5061 3.79549</point>
+              <point>38.6455 3.72447</point>
+              <point>38.8 3.7</point>
+              <point>40.8 3.7</point>
+              <point>40.9545 3.72447</point>
+              <point>41.0939 3.79549</point>
+              <point>41.2045 3.90611</point>
+              <point>41.2755 4.04549</point>
+              <point>41.3 4.2</point>
+              <point>41.3 40.8</point>
+              <point>41.2755 40.9545</point>
+              <point>41.2045 41.0939</point>
+              <point>41.0939 41.2045</point>
+              <point>40.9545 41.2755</point>
+              <point>40.8 41.3</point>
+              <point>38.8 41.3</point>
+              <point>38.6455 41.2755</point>
+              <point>38.5061 41.2045</point>
+              <point>38.3955 41.0939</point>
+              <point>38.3245 40.9545</point>
+              <point>38.3 40.8</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_20">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>48.7 -40.8</point>
+              <point>48.7245 -40.9545</point>
+              <point>48.7955 -41.0939</point>
+              <point>48.9061 -41.2045</point>
+              <point>49.0455 -41.2755</point>
+              <point>49.2 -41.3</point>
+              <point>105.8 -41.3</point>
+              <point>105.955 -41.2755</point>
+              <point>106.094 -41.2045</point>
+              <point>106.205 -41.0939</point>
+              <point>106.276 -40.9545</point>
+              <point>106.3 -40.8</point>
+              <point>106.3 -38.8</point>
+              <point>106.276 -38.6455</point>
+              <point>106.205 -38.5061</point>
+              <point>106.094 -38.3955</point>
+              <point>105.955 -38.3245</point>
+              <point>105.8 -38.3</point>
+              <point>49.2 -38.3</point>
+              <point>49.0455 -38.3245</point>
+              <point>48.9061 -38.3955</point>
+              <point>48.7955 -38.5061</point>
+              <point>48.7245 -38.6455</point>
+              <point>48.7 -38.8</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>48.7 -40.8</point>
+              <point>48.7245 -40.9545</point>
+              <point>48.7955 -41.0939</point>
+              <point>48.9061 -41.2045</point>
+              <point>49.0455 -41.2755</point>
+              <point>49.2 -41.3</point>
+              <point>105.8 -41.3</point>
+              <point>105.955 -41.2755</point>
+              <point>106.094 -41.2045</point>
+              <point>106.205 -41.0939</point>
+              <point>106.276 -40.9545</point>
+              <point>106.3 -40.8</point>
+              <point>106.3 -38.8</point>
+              <point>106.276 -38.6455</point>
+              <point>106.205 -38.5061</point>
+              <point>106.094 -38.3955</point>
+              <point>105.955 -38.3245</point>
+              <point>105.8 -38.3</point>
+              <point>49.2 -38.3</point>
+              <point>49.0455 -38.3245</point>
+              <point>48.9061 -38.3955</point>
+              <point>48.7955 -38.5061</point>
+              <point>48.7245 -38.6455</point>
+              <point>48.7 -38.8</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_21">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>48.7 -6.2</point>
+              <point>48.7245 -6.35451</point>
+              <point>48.7955 -6.49389</point>
+              <point>48.9061 -6.60451</point>
+              <point>49.0455 -6.67553</point>
+              <point>49.2 -6.7</point>
+              <point>84.5 -6.7</point>
+              <point>84.6545 -6.67553</point>
+              <point>84.7939 -6.60451</point>
+              <point>84.9045 -6.49389</point>
+              <point>84.9755 -6.35451</point>
+              <point>85 -6.2</point>
+              <point>85 -4.2</point>
+              <point>84.9755 -4.04549</point>
+              <point>84.9045 -3.90611</point>
+              <point>84.7939 -3.79549</point>
+              <point>84.6545 -3.72447</point>
+              <point>84.5 -3.7</point>
+              <point>49.2 -3.7</point>
+              <point>49.0455 -3.72447</point>
+              <point>48.9061 -3.79549</point>
+              <point>48.7955 -3.90611</point>
+              <point>48.7245 -4.04549</point>
+              <point>48.7 -4.2</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>48.7 -6.2</point>
+              <point>48.7245 -6.35451</point>
+              <point>48.7955 -6.49389</point>
+              <point>48.9061 -6.60451</point>
+              <point>49.0455 -6.67553</point>
+              <point>49.2 -6.7</point>
+              <point>84.5 -6.7</point>
+              <point>84.6545 -6.67553</point>
+              <point>84.7939 -6.60451</point>
+              <point>84.9045 -6.49389</point>
+              <point>84.9755 -6.35451</point>
+              <point>85 -6.2</point>
+              <point>85 -4.2</point>
+              <point>84.9755 -4.04549</point>
+              <point>84.9045 -3.90611</point>
+              <point>84.7939 -3.79549</point>
+              <point>84.6545 -3.72447</point>
+              <point>84.5 -3.7</point>
+              <point>49.2 -3.7</point>
+              <point>49.0455 -3.72447</point>
+              <point>48.9061 -3.79549</point>
+              <point>48.7955 -3.90611</point>
+              <point>48.7245 -4.04549</point>
+              <point>48.7 -4.2</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_22">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>95 -6.2</point>
+              <point>95.0245 -6.35451</point>
+              <point>95.0955 -6.49389</point>
+              <point>95.2061 -6.60451</point>
+              <point>95.3455 -6.67553</point>
+              <point>95.5 -6.7</point>
+              <point>105.8 -6.7</point>
+              <point>105.955 -6.67553</point>
+              <point>106.094 -6.60451</point>
+              <point>106.205 -6.49389</point>
+              <point>106.276 -6.35451</point>
+              <point>106.3 -6.2</point>
+              <point>106.3 -4.2</point>
+              <point>106.276 -4.04549</point>
+              <point>106.205 -3.90611</point>
+              <point>106.094 -3.79549</point>
+              <point>105.955 -3.72447</point>
+              <point>105.8 -3.7</point>
+              <point>95.5 -3.7</point>
+              <point>95.3455 -3.72447</point>
+              <point>95.2061 -3.79549</point>
+              <point>95.0955 -3.90611</point>
+              <point>95.0245 -4.04549</point>
+              <point>95 -4.2</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>95 -6.2</point>
+              <point>95.0245 -6.35451</point>
+              <point>95.0955 -6.49389</point>
+              <point>95.2061 -6.60451</point>
+              <point>95.3455 -6.67553</point>
+              <point>95.5 -6.7</point>
+              <point>105.8 -6.7</point>
+              <point>105.955 -6.67553</point>
+              <point>106.094 -6.60451</point>
+              <point>106.205 -6.49389</point>
+              <point>106.276 -6.35451</point>
+              <point>106.3 -6.2</point>
+              <point>106.3 -4.2</point>
+              <point>106.276 -4.04549</point>
+              <point>106.205 -3.90611</point>
+              <point>106.094 -3.79549</point>
+              <point>105.955 -3.72447</point>
+              <point>105.8 -3.7</point>
+              <point>95.5 -3.7</point>
+              <point>95.3455 -3.72447</point>
+              <point>95.2061 -3.79549</point>
+              <point>95.0955 -3.90611</point>
+              <point>95.0245 -4.04549</point>
+              <point>95 -4.2</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_23">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>48.7 -40.8</point>
+              <point>48.7245 -40.9545</point>
+              <point>48.7955 -41.0939</point>
+              <point>48.9061 -41.2045</point>
+              <point>49.0455 -41.2755</point>
+              <point>49.2 -41.3</point>
+              <point>51.2 -41.3</point>
+              <point>51.3545 -41.2755</point>
+              <point>51.4939 -41.2045</point>
+              <point>51.6045 -41.0939</point>
+              <point>51.6755 -40.9545</point>
+              <point>51.7 -40.8</point>
+              <point>51.7 -4.2</point>
+              <point>51.6755 -4.04549</point>
+              <point>51.6045 -3.90611</point>
+              <point>51.4939 -3.79549</point>
+              <point>51.3545 -3.72447</point>
+              <point>51.2 -3.7</point>
+              <point>49.2 -3.7</point>
+              <point>49.0455 -3.72447</point>
+              <point>48.9061 -3.79549</point>
+              <point>48.7955 -3.90611</point>
+              <point>48.7245 -4.04549</point>
+              <point>48.7 -4.2</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>48.7 -40.8</point>
+              <point>48.7245 -40.9545</point>
+              <point>48.7955 -41.0939</point>
+              <point>48.9061 -41.2045</point>
+              <point>49.0455 -41.2755</point>
+              <point>49.2 -41.3</point>
+              <point>51.2 -41.3</point>
+              <point>51.3545 -41.2755</point>
+              <point>51.4939 -41.2045</point>
+              <point>51.6045 -41.0939</point>
+              <point>51.6755 -40.9545</point>
+              <point>51.7 -40.8</point>
+              <point>51.7 -4.2</point>
+              <point>51.6755 -4.04549</point>
+              <point>51.6045 -3.90611</point>
+              <point>51.4939 -3.79549</point>
+              <point>51.3545 -3.72447</point>
+              <point>51.2 -3.7</point>
+              <point>49.2 -3.7</point>
+              <point>49.0455 -3.72447</point>
+              <point>48.9061 -3.79549</point>
+              <point>48.7955 -3.90611</point>
+              <point>48.7245 -4.04549</point>
+              <point>48.7 -4.2</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_24">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>103.3 -40.8</point>
+              <point>103.324 -40.9545</point>
+              <point>103.395 -41.0939</point>
+              <point>103.506 -41.2045</point>
+              <point>103.645 -41.2755</point>
+              <point>103.8 -41.3</point>
+              <point>105.8 -41.3</point>
+              <point>105.955 -41.2755</point>
+              <point>106.094 -41.2045</point>
+              <point>106.205 -41.0939</point>
+              <point>106.276 -40.9545</point>
+              <point>106.3 -40.8</point>
+              <point>106.3 -4.2</point>
+              <point>106.276 -4.04549</point>
+              <point>106.205 -3.90611</point>
+              <point>106.094 -3.79549</point>
+              <point>105.955 -3.72447</point>
+              <point>105.8 -3.7</point>
+              <point>103.8 -3.7</point>
+              <point>103.645 -3.72447</point>
+              <point>103.506 -3.79549</point>
+              <point>103.395 -3.90611</point>
+              <point>103.324 -4.04549</point>
+              <point>103.3 -4.2</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>103.3 -40.8</point>
+              <point>103.324 -40.9545</point>
+              <point>103.395 -41.0939</point>
+              <point>103.506 -41.2045</point>
+              <point>103.645 -41.2755</point>
+              <point>103.8 -41.3</point>
+              <point>105.8 -41.3</point>
+              <point>105.955 -41.2755</point>
+              <point>106.094 -41.2045</point>
+              <point>106.205 -41.0939</point>
+              <point>106.276 -40.9545</point>
+              <point>106.3 -40.8</point>
+              <point>106.3 -4.2</point>
+              <point>106.276 -4.04549</point>
+              <point>106.205 -3.90611</point>
+              <point>106.094 -3.79549</point>
+              <point>105.955 -3.72447</point>
+              <point>105.8 -3.7</point>
+              <point>103.8 -3.7</point>
+              <point>103.645 -3.72447</point>
+              <point>103.506 -3.79549</point>
+              <point>103.395 -3.90611</point>
+              <point>103.324 -4.04549</point>
+              <point>103.3 -4.2</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_25">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>48.7 4.2</point>
+              <point>48.7245 4.04549</point>
+              <point>48.7955 3.90611</point>
+              <point>48.9061 3.79549</point>
+              <point>49.0455 3.72447</point>
+              <point>49.2 3.7</point>
+              <point>105.8 3.7</point>
+              <point>105.955 3.72447</point>
+              <point>106.094 3.79549</point>
+              <point>106.205 3.90611</point>
+              <point>106.276 4.04549</point>
+              <point>106.3 4.2</point>
+              <point>106.3 6.2</point>
+              <point>106.276 6.35451</point>
+              <point>106.205 6.49389</point>
+              <point>106.094 6.60451</point>
+              <point>105.955 6.67553</point>
+              <point>105.8 6.7</point>
+              <point>49.2 6.7</point>
+              <point>49.0455 6.67553</point>
+              <point>48.9061 6.60451</point>
+              <point>48.7955 6.49389</point>
+              <point>48.7245 6.35451</point>
+              <point>48.7 6.2</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>48.7 4.2</point>
+              <point>48.7245 4.04549</point>
+              <point>48.7955 3.90611</point>
+              <point>48.9061 3.79549</point>
+              <point>49.0455 3.72447</point>
+              <point>49.2 3.7</point>
+              <point>105.8 3.7</point>
+              <point>105.955 3.72447</point>
+              <point>106.094 3.79549</point>
+              <point>106.205 3.90611</point>
+              <point>106.276 4.04549</point>
+              <point>106.3 4.2</point>
+              <point>106.3 6.2</point>
+              <point>106.276 6.35451</point>
+              <point>106.205 6.49389</point>
+              <point>106.094 6.60451</point>
+              <point>105.955 6.67553</point>
+              <point>105.8 6.7</point>
+              <point>49.2 6.7</point>
+              <point>49.0455 6.67553</point>
+              <point>48.9061 6.60451</point>
+              <point>48.7955 6.49389</point>
+              <point>48.7245 6.35451</point>
+              <point>48.7 6.2</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_26">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>48.7 38.8</point>
+              <point>48.7245 38.6455</point>
+              <point>48.7955 38.5061</point>
+              <point>48.9061 38.3955</point>
+              <point>49.0455 38.3245</point>
+              <point>49.2 38.3</point>
+              <point>105.8 38.3</point>
+              <point>105.955 38.3245</point>
+              <point>106.094 38.3955</point>
+              <point>106.205 38.5061</point>
+              <point>106.276 38.6455</point>
+              <point>106.3 38.8</point>
+              <point>106.3 40.8</point>
+              <point>106.276 40.9545</point>
+              <point>106.205 41.0939</point>
+              <point>106.094 41.2045</point>
+              <point>105.955 41.2755</point>
+              <point>105.8 41.3</point>
+              <point>49.2 41.3</point>
+              <point>49.0455 41.2755</point>
+              <point>48.9061 41.2045</point>
+              <point>48.7955 41.0939</point>
+              <point>48.7245 40.9545</point>
+              <point>48.7 40.8</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>48.7 38.8</point>
+              <point>48.7245 38.6455</point>
+              <point>48.7955 38.5061</point>
+              <point>48.9061 38.3955</point>
+              <point>49.0455 38.3245</point>
+              <point>49.2 38.3</point>
+              <point>105.8 38.3</point>
+              <point>105.955 38.3245</point>
+              <point>106.094 38.3955</point>
+              <point>106.205 38.5061</point>
+              <point>106.276 38.6455</point>
+              <point>106.3 38.8</point>
+              <point>106.3 40.8</point>
+              <point>106.276 40.9545</point>
+              <point>106.205 41.0939</point>
+              <point>106.094 41.2045</point>
+              <point>105.955 41.2755</point>
+              <point>105.8 41.3</point>
+              <point>49.2 41.3</point>
+              <point>49.0455 41.2755</point>
+              <point>48.9061 41.2045</point>
+              <point>48.7955 41.0939</point>
+              <point>48.7245 40.9545</point>
+              <point>48.7 40.8</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_27">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>48.7 4.2</point>
+              <point>48.7245 4.04549</point>
+              <point>48.7955 3.90611</point>
+              <point>48.9061 3.79549</point>
+              <point>49.0455 3.72447</point>
+              <point>49.2 3.7</point>
+              <point>51.2 3.7</point>
+              <point>51.3545 3.72447</point>
+              <point>51.4939 3.79549</point>
+              <point>51.6045 3.90611</point>
+              <point>51.6755 4.04549</point>
+              <point>51.7 4.2</point>
+              <point>51.7 40.8</point>
+              <point>51.6755 40.9545</point>
+              <point>51.6045 41.0939</point>
+              <point>51.4939 41.2045</point>
+              <point>51.3545 41.2755</point>
+              <point>51.2 41.3</point>
+              <point>49.2 41.3</point>
+              <point>49.0455 41.2755</point>
+              <point>48.9061 41.2045</point>
+              <point>48.7955 41.0939</point>
+              <point>48.7245 40.9545</point>
+              <point>48.7 40.8</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>48.7 4.2</point>
+              <point>48.7245 4.04549</point>
+              <point>48.7955 3.90611</point>
+              <point>48.9061 3.79549</point>
+              <point>49.0455 3.72447</point>
+              <point>49.2 3.7</point>
+              <point>51.2 3.7</point>
+              <point>51.3545 3.72447</point>
+              <point>51.4939 3.79549</point>
+              <point>51.6045 3.90611</point>
+              <point>51.6755 4.04549</point>
+              <point>51.7 4.2</point>
+              <point>51.7 40.8</point>
+              <point>51.6755 40.9545</point>
+              <point>51.6045 41.0939</point>
+              <point>51.4939 41.2045</point>
+              <point>51.3545 41.2755</point>
+              <point>51.2 41.3</point>
+              <point>49.2 41.3</point>
+              <point>49.0455 41.2755</point>
+              <point>48.9061 41.2045</point>
+              <point>48.7955 41.0939</point>
+              <point>48.7245 40.9545</point>
+              <point>48.7 40.8</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_28">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>103.3 4.2</point>
+              <point>103.324 4.04549</point>
+              <point>103.395 3.90611</point>
+              <point>103.506 3.79549</point>
+              <point>103.645 3.72447</point>
+              <point>103.8 3.7</point>
+              <point>105.8 3.7</point>
+              <point>105.955 3.72447</point>
+              <point>106.094 3.79549</point>
+              <point>106.205 3.90611</point>
+              <point>106.276 4.04549</point>
+              <point>106.3 4.2</point>
+              <point>106.3 40.8</point>
+              <point>106.276 40.9545</point>
+              <point>106.205 41.0939</point>
+              <point>106.094 41.2045</point>
+              <point>105.955 41.2755</point>
+              <point>105.8 41.3</point>
+              <point>103.8 41.3</point>
+              <point>103.645 41.2755</point>
+              <point>103.506 41.2045</point>
+              <point>103.395 41.0939</point>
+              <point>103.324 40.9545</point>
+              <point>103.3 40.8</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>103.3 4.2</point>
+              <point>103.324 4.04549</point>
+              <point>103.395 3.90611</point>
+              <point>103.506 3.79549</point>
+              <point>103.645 3.72447</point>
+              <point>103.8 3.7</point>
+              <point>105.8 3.7</point>
+              <point>105.955 3.72447</point>
+              <point>106.094 3.79549</point>
+              <point>106.205 3.90611</point>
+              <point>106.276 4.04549</point>
+              <point>106.3 4.2</point>
+              <point>106.3 40.8</point>
+              <point>106.276 40.9545</point>
+              <point>106.205 41.0939</point>
+              <point>106.094 41.2045</point>
+              <point>105.955 41.2755</point>
+              <point>105.8 41.3</point>
+              <point>103.8 41.3</point>
+              <point>103.645 41.2755</point>
+              <point>103.506 41.2045</point>
+              <point>103.395 41.0939</point>
+              <point>103.324 40.9545</point>
+              <point>103.3 40.8</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_29">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>113.7 -41.2</point>
+              <point>113.705 -41.2309</point>
+              <point>113.719 -41.2588</point>
+              <point>113.741 -41.2809</point>
+              <point>113.769 -41.2951</point>
+              <point>113.8 -41.3</point>
+              <point>116.2 -41.3</point>
+              <point>116.231 -41.2951</point>
+              <point>116.259 -41.2809</point>
+              <point>116.281 -41.2588</point>
+              <point>116.295 -41.2309</point>
+              <point>116.3 -41.2</point>
+              <point>116.3 -40.9</point>
+              <point>116.295 -40.8691</point>
+              <point>116.281 -40.8412</point>
+              <point>116.259 -40.8191</point>
+              <point>116.231 -40.8049</point>
+              <point>116.2 -40.8</point>
+              <point>113.8 -40.8</point>
+              <point>113.769 -40.8049</point>
+              <point>113.741 -40.8191</point>
+              <point>113.719 -40.8412</point>
+              <point>113.705 -40.8691</point>
+              <point>113.7 -40.9</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>113.7 -41.2</point>
+              <point>113.705 -41.2309</point>
+              <point>113.719 -41.2588</point>
+              <point>113.741 -41.2809</point>
+              <point>113.769 -41.2951</point>
+              <point>113.8 -41.3</point>
+              <point>116.2 -41.3</point>
+              <point>116.231 -41.2951</point>
+              <point>116.259 -41.2809</point>
+              <point>116.281 -41.2588</point>
+              <point>116.295 -41.2309</point>
+              <point>116.3 -41.2</point>
+              <point>116.3 -40.9</point>
+              <point>116.295 -40.8691</point>
+              <point>116.281 -40.8412</point>
+              <point>116.259 -40.8191</point>
+              <point>116.231 -40.8049</point>
+              <point>116.2 -40.8</point>
+              <point>113.8 -40.8</point>
+              <point>113.769 -40.8049</point>
+              <point>113.741 -40.8191</point>
+              <point>113.719 -40.8412</point>
+              <point>113.705 -40.8691</point>
+              <point>113.7 -40.9</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_30">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>113.7 -4.1</point>
+              <point>113.705 -4.1309</point>
+              <point>113.719 -4.15878</point>
+              <point>113.741 -4.1809</point>
+              <point>113.769 -4.19511</point>
+              <point>113.8 -4.2</point>
+              <point>116.2 -4.2</point>
+              <point>116.231 -4.19511</point>
+              <point>116.259 -4.1809</point>
+              <point>116.281 -4.15878</point>
+              <point>116.295 -4.1309</point>
+              <point>116.3 -4.1</point>
+              <point>116.3 -3.8</point>
+              <point>116.295 -3.7691</point>
+              <point>116.281 -3.74122</point>
+              <point>116.259 -3.7191</point>
+              <point>116.231 -3.70489</point>
+              <point>116.2 -3.7</point>
+              <point>113.8 -3.7</point>
+              <point>113.769 -3.70489</point>
+              <point>113.741 -3.7191</point>
+              <point>113.719 -3.74122</point>
+              <point>113.705 -3.7691</point>
+              <point>113.7 -3.8</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>113.7 -4.1</point>
+              <point>113.705 -4.1309</point>
+              <point>113.719 -4.15878</point>
+              <point>113.741 -4.1809</point>
+              <point>113.769 -4.19511</point>
+              <point>113.8 -4.2</point>
+              <point>116.2 -4.2</point>
+              <point>116.231 -4.19511</point>
+              <point>116.259 -4.1809</point>
+              <point>116.281 -4.15878</point>
+              <point>116.295 -4.1309</point>
+              <point>116.3 -4.1</point>
+              <point>116.3 -3.8</point>
+              <point>116.295 -3.7691</point>
+              <point>116.281 -3.74122</point>
+              <point>116.259 -3.7191</point>
+              <point>116.231 -3.70489</point>
+              <point>116.2 -3.7</point>
+              <point>113.8 -3.7</point>
+              <point>113.769 -3.70489</point>
+              <point>113.741 -3.7191</point>
+              <point>113.719 -3.74122</point>
+              <point>113.705 -3.7691</point>
+              <point>113.7 -3.8</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_31">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>113.7 -41.2</point>
+              <point>113.705 -41.2309</point>
+              <point>113.719 -41.2588</point>
+              <point>113.741 -41.2809</point>
+              <point>113.769 -41.2951</point>
+              <point>113.8 -41.3</point>
+              <point>114.1 -41.3</point>
+              <point>114.131 -41.2951</point>
+              <point>114.159 -41.2809</point>
+              <point>114.181 -41.2588</point>
+              <point>114.195 -41.2309</point>
+              <point>114.2 -41.2</point>
+              <point>114.2 -3.8</point>
+              <point>114.195 -3.7691</point>
+              <point>114.181 -3.74122</point>
+              <point>114.159 -3.7191</point>
+              <point>114.131 -3.70489</point>
+              <point>114.1 -3.7</point>
+              <point>113.8 -3.7</point>
+              <point>113.769 -3.70489</point>
+              <point>113.741 -3.7191</point>
+              <point>113.719 -3.74122</point>
+              <point>113.705 -3.7691</point>
+              <point>113.7 -3.8</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>113.7 -41.2</point>
+              <point>113.705 -41.2309</point>
+              <point>113.719 -41.2588</point>
+              <point>113.741 -41.2809</point>
+              <point>113.769 -41.2951</point>
+              <point>113.8 -41.3</point>
+              <point>114.1 -41.3</point>
+              <point>114.131 -41.2951</point>
+              <point>114.159 -41.2809</point>
+              <point>114.181 -41.2588</point>
+              <point>114.195 -41.2309</point>
+              <point>114.2 -41.2</point>
+              <point>114.2 -3.8</point>
+              <point>114.195 -3.7691</point>
+              <point>114.181 -3.74122</point>
+              <point>114.159 -3.7191</point>
+              <point>114.131 -3.70489</point>
+              <point>114.1 -3.7</point>
+              <point>113.8 -3.7</point>
+              <point>113.769 -3.70489</point>
+              <point>113.741 -3.7191</point>
+              <point>113.719 -3.74122</point>
+              <point>113.705 -3.7691</point>
+              <point>113.7 -3.8</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_32">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>115.8 -41.2</point>
+              <point>115.805 -41.2309</point>
+              <point>115.819 -41.2588</point>
+              <point>115.841 -41.2809</point>
+              <point>115.869 -41.2951</point>
+              <point>115.9 -41.3</point>
+              <point>116.2 -41.3</point>
+              <point>116.231 -41.2951</point>
+              <point>116.259 -41.2809</point>
+              <point>116.281 -41.2588</point>
+              <point>116.295 -41.2309</point>
+              <point>116.3 -41.2</point>
+              <point>116.3 -3.8</point>
+              <point>116.295 -3.7691</point>
+              <point>116.281 -3.74122</point>
+              <point>116.259 -3.7191</point>
+              <point>116.231 -3.70489</point>
+              <point>116.2 -3.7</point>
+              <point>115.9 -3.7</point>
+              <point>115.869 -3.70489</point>
+              <point>115.841 -3.7191</point>
+              <point>115.819 -3.74122</point>
+              <point>115.805 -3.7691</point>
+              <point>115.8 -3.8</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>115.8 -41.2</point>
+              <point>115.805 -41.2309</point>
+              <point>115.819 -41.2588</point>
+              <point>115.841 -41.2809</point>
+              <point>115.869 -41.2951</point>
+              <point>115.9 -41.3</point>
+              <point>116.2 -41.3</point>
+              <point>116.231 -41.2951</point>
+              <point>116.259 -41.2809</point>
+              <point>116.281 -41.2588</point>
+              <point>116.295 -41.2309</point>
+              <point>116.3 -41.2</point>
+              <point>116.3 -3.8</point>
+              <point>116.295 -3.7691</point>
+              <point>116.281 -3.74122</point>
+              <point>116.259 -3.7191</point>
+              <point>116.231 -3.70489</point>
+              <point>116.2 -3.7</point>
+              <point>115.9 -3.7</point>
+              <point>115.869 -3.70489</point>
+              <point>115.841 -3.7191</point>
+              <point>115.819 -3.74122</point>
+              <point>115.805 -3.7691</point>
+              <point>115.8 -3.8</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_33">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>113.7 3.8</point>
+              <point>113.705 3.7691</point>
+              <point>113.719 3.74122</point>
+              <point>113.741 3.7191</point>
+              <point>113.769 3.70489</point>
+              <point>113.8 3.7</point>
+              <point>116.2 3.7</point>
+              <point>116.231 3.70489</point>
+              <point>116.259 3.7191</point>
+              <point>116.281 3.74122</point>
+              <point>116.295 3.7691</point>
+              <point>116.3 3.8</point>
+              <point>116.3 4.1</point>
+              <point>116.295 4.1309</point>
+              <point>116.281 4.15878</point>
+              <point>116.259 4.1809</point>
+              <point>116.231 4.19511</point>
+              <point>116.2 4.2</point>
+              <point>113.8 4.2</point>
+              <point>113.769 4.19511</point>
+              <point>113.741 4.1809</point>
+              <point>113.719 4.15878</point>
+              <point>113.705 4.1309</point>
+              <point>113.7 4.1</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>113.7 3.8</point>
+              <point>113.705 3.7691</point>
+              <point>113.719 3.74122</point>
+              <point>113.741 3.7191</point>
+              <point>113.769 3.70489</point>
+              <point>113.8 3.7</point>
+              <point>116.2 3.7</point>
+              <point>116.231 3.70489</point>
+              <point>116.259 3.7191</point>
+              <point>116.281 3.74122</point>
+              <point>116.295 3.7691</point>
+              <point>116.3 3.8</point>
+              <point>116.3 4.1</point>
+              <point>116.295 4.1309</point>
+              <point>116.281 4.15878</point>
+              <point>116.259 4.1809</point>
+              <point>116.231 4.19511</point>
+              <point>116.2 4.2</point>
+              <point>113.8 4.2</point>
+              <point>113.769 4.19511</point>
+              <point>113.741 4.1809</point>
+              <point>113.719 4.15878</point>
+              <point>113.705 4.1309</point>
+              <point>113.7 4.1</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_34">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>113.7 40.9</point>
+              <point>113.705 40.8691</point>
+              <point>113.719 40.8412</point>
+              <point>113.741 40.8191</point>
+              <point>113.769 40.8049</point>
+              <point>113.8 40.8</point>
+              <point>116.2 40.8</point>
+              <point>116.231 40.8049</point>
+              <point>116.259 40.8191</point>
+              <point>116.281 40.8412</point>
+              <point>116.295 40.8691</point>
+              <point>116.3 40.9</point>
+              <point>116.3 41.2</point>
+              <point>116.295 41.2309</point>
+              <point>116.281 41.2588</point>
+              <point>116.259 41.2809</point>
+              <point>116.231 41.2951</point>
+              <point>116.2 41.3</point>
+              <point>113.8 41.3</point>
+              <point>113.769 41.2951</point>
+              <point>113.741 41.2809</point>
+              <point>113.719 41.2588</point>
+              <point>113.705 41.2309</point>
+              <point>113.7 41.2</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>113.7 40.9</point>
+              <point>113.705 40.8691</point>
+              <point>113.719 40.8412</point>
+              <point>113.741 40.8191</point>
+              <point>113.769 40.8049</point>
+              <point>113.8 40.8</point>
+              <point>116.2 40.8</point>
+              <point>116.231 40.8049</point>
+              <point>116.259 40.8191</point>
+              <point>116.281 40.8412</point>
+              <point>116.295 40.8691</point>
+              <point>116.3 40.9</point>
+              <point>116.3 41.2</point>
+              <point>116.295 41.2309</point>
+              <point>116.281 41.2588</point>
+              <point>116.259 41.2809</point>
+              <point>116.231 41.2951</point>
+              <point>116.2 41.3</point>
+              <point>113.8 41.3</point>
+              <point>113.769 41.2951</point>
+              <point>113.741 41.2809</point>
+              <point>113.719 41.2588</point>
+              <point>113.705 41.2309</point>
+              <point>113.7 41.2</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_35">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>113.7 3.8</point>
+              <point>113.705 3.7691</point>
+              <point>113.719 3.74122</point>
+              <point>113.741 3.7191</point>
+              <point>113.769 3.70489</point>
+              <point>113.8 3.7</point>
+              <point>114.1 3.7</point>
+              <point>114.131 3.70489</point>
+              <point>114.159 3.7191</point>
+              <point>114.181 3.74122</point>
+              <point>114.195 3.7691</point>
+              <point>114.2 3.8</point>
+              <point>114.2 41.2</point>
+              <point>114.195 41.2309</point>
+              <point>114.181 41.2588</point>
+              <point>114.159 41.2809</point>
+              <point>114.131 41.2951</point>
+              <point>114.1 41.3</point>
+              <point>113.8 41.3</point>
+              <point>113.769 41.2951</point>
+              <point>113.741 41.2809</point>
+              <point>113.719 41.2588</point>
+              <point>113.705 41.2309</point>
+              <point>113.7 41.2</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>113.7 3.8</point>
+              <point>113.705 3.7691</point>
+              <point>113.719 3.74122</point>
+              <point>113.741 3.7191</point>
+              <point>113.769 3.70489</point>
+              <point>113.8 3.7</point>
+              <point>114.1 3.7</point>
+              <point>114.131 3.70489</point>
+              <point>114.159 3.7191</point>
+              <point>114.181 3.74122</point>
+              <point>114.195 3.7691</point>
+              <point>114.2 3.8</point>
+              <point>114.2 41.2</point>
+              <point>114.195 41.2309</point>
+              <point>114.181 41.2588</point>
+              <point>114.159 41.2809</point>
+              <point>114.131 41.2951</point>
+              <point>114.1 41.3</point>
+              <point>113.8 41.3</point>
+              <point>113.769 41.2951</point>
+              <point>113.741 41.2809</point>
+              <point>113.719 41.2588</point>
+              <point>113.705 41.2309</point>
+              <point>113.7 41.2</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_36">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>115.8 3.8</point>
+              <point>115.805 3.7691</point>
+              <point>115.819 3.74122</point>
+              <point>115.841 3.7191</point>
+              <point>115.869 3.70489</point>
+              <point>115.9 3.7</point>
+              <point>116.2 3.7</point>
+              <point>116.231 3.70489</point>
+              <point>116.259 3.7191</point>
+              <point>116.281 3.74122</point>
+              <point>116.295 3.7691</point>
+              <point>116.3 3.8</point>
+              <point>116.3 41.2</point>
+              <point>116.295 41.2309</point>
+              <point>116.281 41.2588</point>
+              <point>116.259 41.2809</point>
+              <point>116.231 41.2951</point>
+              <point>116.2 41.3</point>
+              <point>115.9 41.3</point>
+              <point>115.869 41.2951</point>
+              <point>115.841 41.2809</point>
+              <point>115.819 41.2588</point>
+              <point>115.805 41.2309</point>
+              <point>115.8 41.2</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>115.8 3.8</point>
+              <point>115.805 3.7691</point>
+              <point>115.819 3.74122</point>
+              <point>115.841 3.7191</point>
+              <point>115.869 3.70489</point>
+              <point>115.9 3.7</point>
+              <point>116.2 3.7</point>
+              <point>116.231 3.70489</point>
+              <point>116.259 3.7191</point>
+              <point>116.281 3.74122</point>
+              <point>116.295 3.7691</point>
+              <point>116.3 3.8</point>
+              <point>116.3 41.2</point>
+              <point>116.295 41.2309</point>
+              <point>116.281 41.2588</point>
+              <point>116.259 41.2809</point>
+              <point>116.231 41.2951</point>
+              <point>116.2 41.3</point>
+              <point>115.9 41.3</point>
+              <point>115.869 41.2951</point>
+              <point>115.841 41.2809</point>
+              <point>115.819 41.2588</point>
+              <point>115.805 41.2309</point>
+              <point>115.8 41.2</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_37">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>123.7 -51.2</point>
+              <point>123.724 -51.3545</point>
+              <point>123.795 -51.4939</point>
+              <point>123.906 -51.6045</point>
+              <point>124.045 -51.6755</point>
+              <point>124.2 -51.7</point>
+              <point>126.2 -51.7</point>
+              <point>126.355 -51.6755</point>
+              <point>126.494 -51.6045</point>
+              <point>126.605 -51.4939</point>
+              <point>126.676 -51.3545</point>
+              <point>126.7 -51.2</point>
+              <point>126.7 48.2</point>
+              <point>126.676 48.3545</point>
+              <point>126.605 48.4939</point>
+              <point>126.494 48.6045</point>
+              <point>126.355 48.6755</point>
+              <point>126.2 48.7</point>
+              <point>124.2 48.7</point>
+              <point>124.045 48.6755</point>
+              <point>123.906 48.6045</point>
+              <point>123.795 48.4939</point>
+              <point>123.724 48.3545</point>
+              <point>123.7 48.2</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>123.7 -51.2</point>
+              <point>123.724 -51.3545</point>
+              <point>123.795 -51.4939</point>
+              <point>123.906 -51.6045</point>
+              <point>124.045 -51.6755</point>
+              <point>124.2 -51.7</point>
+              <point>126.2 -51.7</point>
+              <point>126.355 -51.6755</point>
+              <point>126.494 -51.6045</point>
+              <point>126.605 -51.4939</point>
+              <point>126.676 -51.3545</point>
+              <point>126.7 -51.2</point>
+              <point>126.7 48.2</point>
+              <point>126.676 48.3545</point>
+              <point>126.605 48.4939</point>
+              <point>126.494 48.6045</point>
+              <point>126.355 48.6755</point>
+              <point>126.2 48.7</point>
+              <point>124.2 48.7</point>
+              <point>124.045 48.6755</point>
+              <point>123.906 48.6045</point>
+              <point>123.795 48.4939</point>
+              <point>123.724 48.3545</point>
+              <point>123.7 48.2</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name="sidewalk_39">
+      <static>1</static>
+      <pose frame="">0 0 0 0 -0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <polyline>
+              <height>0.15</height>
+              <point>-48.7 -51.2</point>
+              <point>-48.6755 -51.3545</point>
+              <point>-48.6045 -51.4939</point>
+              <point>-48.4939 -51.6045</point>
+              <point>-48.3545 -51.6755</point>
+              <point>-48.2 -51.7</point>
+              <point>126.2 -51.7</point>
+              <point>126.355 -51.6755</point>
+              <point>126.494 -51.6045</point>
+              <point>126.605 -51.4939</point>
+              <point>126.676 -51.3545</point>
+              <point>126.7 -51.2</point>
+              <point>126.7 -49.2</point>
+              <point>126.676 -49.0455</point>
+              <point>126.605 -48.9061</point>
+              <point>126.494 -48.7955</point>
+              <point>126.355 -48.7245</point>
+              <point>126.2 -48.7</point>
+              <point>-48.2 -48.7</point>
+              <point>-48.3545 -48.7245</point>
+              <point>-48.4939 -48.7955</point>
+              <point>-48.6045 -48.9061</point>
+              <point>-48.6755 -49.0455</point>
+              <point>-48.7 -49.2</point>
+            </polyline>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+          </material>
+        </visual>
+<collision name="collision">
+<geometry>
+<polyline>
+              <height>0.15</height>
+              <point>-48.7 -51.2</point>
+              <point>-48.6755 -51.3545</point>
+              <point>-48.6045 -51.4939</point>
+              <point>-48.4939 -51.6045</point>
+              <point>-48.3545 -51.6755</point>
+              <point>-48.2 -51.7</point>
+              <point>126.2 -51.7</point>
+              <point>126.355 -51.6755</point>
+              <point>126.494 -51.6045</point>
+              <point>126.605 -51.4939</point>
+              <point>126.676 -51.3545</point>
+              <point>126.7 -51.2</point>
+              <point>126.7 -49.2</point>
+              <point>126.676 -49.0455</point>
+              <point>126.605 -48.9061</point>
+              <point>126.494 -48.7955</point>
+              <point>126.355 -48.7245</point>
+              <point>126.2 -48.7</point>
+              <point>-48.2 -48.7</point>
+              <point>-48.3545 -48.7245</point>
+              <point>-48.4939 -48.7955</point>
+              <point>-48.6045 -48.9061</point>
+              <point>-48.6755 -49.0455</point>
+              <point>-48.7 -49.2</point>
+</polyline>
+</geometry>
+<max_contacts>10</max_contacts>
+ <contact>
+<ode />
+</contact>
+<bounce />
+<friction>
+<torsional>
+<ode />
+</torsional>
+<ode />
+</friction>
+</collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <road name="sandy_path">
+      <width>17.9</width>
+      <point>-73 -47.96 0.01</point>
+      <point>-73 2.96 0.01</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name></script>
+      </material>
+    </road>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type="adiabatic" />
+    <wind />
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>0</latitude_deg>
+      <longitude_deg>0</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+    <state world_name="default">
+      <sim_time>1752 176000000</sim_time>
+      <real_time>1519 904767261</real_time>
+      <wall_time>1581412925 146493851</wall_time>
+      <iterations>287494</iterations>
+      <actor name="actor1">
+     <plugin name="actor_collisions_plugin" filename="libActorCollisionsPlugin.so">
+          <scaling collision="LHipJoint_LeftUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftUpLeg_LeftLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftLeg_LeftFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftFoot_LeftToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="RHipJoint_RightUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightUpLeg_RightLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightLeg_RightFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightFoot_RightToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="LowerBack_Spine_collision" scale="12.0 20.0 5.0 " />
+          <scaling collision="Spine_Spine1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck_Neck1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck1_Head_collision" scale="5.0 5.0 3.0" />
+          <scaling collision="LeftShoulder_LeftArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftArm_LeftForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftForeArm_LeftHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftFingerBase_LeftHandIndex1_collision" scale="4.0 4.0 3.0" />
+          <scaling collision="RightShoulder_RightArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightArm_RightForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightForeArm_RightHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightFingerBase_RightHandIndex1_collision" scale="4.0 4.0 3.0" />
+        </plugin>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+        <interpolate_x>1</interpolate_x>
+      </animation>
+      <plugin name="actor_plugin" filename="libActorPlugin.so">
+      </plugin>
+    </actor>
+
+    <actor name="actor2">
+     <plugin name="actor_collisions_plugin" filename="libActorCollisionsPlugin.so">
+          <scaling collision="LHipJoint_LeftUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftUpLeg_LeftLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftLeg_LeftFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftFoot_LeftToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="RHipJoint_RightUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightUpLeg_RightLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightLeg_RightFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightFoot_RightToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="LowerBack_Spine_collision" scale="12.0 20.0 5.0 " />
+          <scaling collision="Spine_Spine1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck_Neck1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck1_Head_collision" scale="5.0 5.0 3.0" />
+          <scaling collision="LeftShoulder_LeftArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftArm_LeftForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftForeArm_LeftHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftFingerBase_LeftHandIndex1_collision" scale="4.0 4.0 3.0" />
+          <scaling collision="RightShoulder_RightArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightArm_RightForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightForeArm_RightHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightFingerBase_RightHandIndex1_collision" scale="4.0 4.0 3.0" />
+        </plugin>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+        <interpolate_x>1</interpolate_x>
+      </animation>
+    </actor>
+    <actor name="actor3">
+     <plugin name="actor_collisions_plugin" filename="libActorCollisionsPlugin.so">
+          <scaling collision="LHipJoint_LeftUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftUpLeg_LeftLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftLeg_LeftFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftFoot_LeftToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="RHipJoint_RightUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightUpLeg_RightLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightLeg_RightFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightFoot_RightToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="LowerBack_Spine_collision" scale="12.0 20.0 5.0 " />
+          <scaling collision="Spine_Spine1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck_Neck1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck1_Head_collision" scale="5.0 5.0 3.0" />
+          <scaling collision="LeftShoulder_LeftArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftArm_LeftForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftForeArm_LeftHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftFingerBase_LeftHandIndex1_collision" scale="4.0 4.0 3.0" />
+          <scaling collision="RightShoulder_RightArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightArm_RightForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightForeArm_RightHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightFingerBase_RightHandIndex1_collision" scale="4.0 4.0 3.0" />
+        </plugin>
+      <skin>
+        <filename>moonwalk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="running">
+        <filename>run.dae</filename>
+        <scale>1.0</scale>
+        <interpolate_x>1</interpolate_x>
+      </animation>
+    </actor>
+    <actor name="actor4">
+     <plugin name="actor_collisions_plugin" filename="libActorCollisionsPlugin.so">
+          <scaling collision="LHipJoint_LeftUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftUpLeg_LeftLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftLeg_LeftFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftFoot_LeftToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="RHipJoint_RightUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightUpLeg_RightLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightLeg_RightFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightFoot_RightToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="LowerBack_Spine_collision" scale="12.0 20.0 5.0 " />
+          <scaling collision="Spine_Spine1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck_Neck1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck1_Head_collision" scale="5.0 5.0 3.0" />
+          <scaling collision="LeftShoulder_LeftArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftArm_LeftForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftForeArm_LeftHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftFingerBase_LeftHandIndex1_collision" scale="4.0 4.0 3.0" />
+          <scaling collision="RightShoulder_RightArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightArm_RightForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightForeArm_RightHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightFingerBase_RightHandIndex1_collision" scale="4.0 4.0 3.0" />
+        </plugin>
+      <skin>
+        <filename>moonwalk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="standing up">
+        <filename>stand.dae</filename>
+        <scale>1.0</scale>
+        <interpolate_x>1</interpolate_x>
+      </animation>
+    </actor>
+    <actor name="actor5">
+     <plugin name="actor_collisions_plugin" filename="libActorCollisionsPlugin.so">
+          <scaling collision="LHipJoint_LeftUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftUpLeg_LeftLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftLeg_LeftFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="LeftFoot_LeftToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="RHipJoint_RightUpLeg_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightUpLeg_RightLeg_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightLeg_RightFoot_collision" scale="8.0 8.0 1.0" />
+          <scaling collision="RightFoot_RightToeBase_collision" scale="4.0 4.0 1.5" />
+          <scaling collision="LowerBack_Spine_collision" scale="12.0 20.0 5.0 " />
+          <scaling collision="Spine_Spine1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck_Neck1_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="Neck1_Head_collision" scale="5.0 5.0 3.0" />
+          <scaling collision="LeftShoulder_LeftArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="LeftArm_LeftForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftForeArm_LeftHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="LeftFingerBase_LeftHandIndex1_collision" scale="4.0 4.0 3.0" />
+          <scaling collision="RightShoulder_RightArm_collision" scale="0.01 0.001 0.001" />
+          <scaling collision="RightArm_RightForeArm_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightForeArm_RightHand_collision" scale="5.0 5.0 1.0" />
+          <scaling collision="RightFingerBase_RightHandIndex1_collision" scale="4.0 4.0 3.0" />
+        </plugin>
+      <skin>
+        <filename>moonwalk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="sitting down">
+        <filename>sitting.dae</filename>
+        <scale>1.0</scale>
+        <interpolate_x>1</interpolate_x>
+      </animation>
+    </actor>
+
+
+
+
+
+      
+      <model name="city_terrain_1">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 -5 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="ground_plane">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="ocean_2">
+        <pose frame="">40 -20 -2 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="ocean_link">
+          <pose frame="">40 -20 -2 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_10">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_11">
+        <pose frame="">0.065383 -0.432779 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0.065383 -0.432779 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_12">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_13">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_14">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_15">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_16">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_17">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_18">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_19">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_20">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_21">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_22">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_23">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_24">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_25">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_26">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_27">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_28">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_29">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_3">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_30">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_31">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_32">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_33">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_34">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_35">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_36">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_37">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_39">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_4">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_5">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_6">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_7">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_8">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="sidewalk_9">
+        <pose frame="">0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name="unit_cylinder">
+        <pose frame="">20.6722 33.4177 0.49998 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name="link">
+          <pose frame="">20.6722 33.4177 0.49998 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 -9.8 -0 -0 -0</acceleration>
+          <wrench>0 0 -9.8 0 -0 0</wrench>
+        </link>
+      </model>
+      <light name="sun">
+        <pose frame="">0 0 1000 0 -0 0</pose>
+      </light>
+      <light name="user_directional_light_0">
+        <pose frame="">24.0343 3.49866 18 0 -0 0</pose>
+      </light>
+      <light name="user_point_light_0">
+        <pose frame="">-70.5235 -10.3411 1 0 -0 0</pose>
+      </light>
+    </state>
+    <model name="unit_cylinder">
+      <pose frame="">20.6722 33.4177 0.5 0 -0 0</pose>
+      <link name="link">
+        <inertial>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.145833</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.145833</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+          <pose frame="">0 0 0 0 -0 0</pose>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+
+            <contact>
+              <ode />
+            </contact>
+            <bounce />
+            <friction>
+              <torsional>
+                <ode />
+              </torsional>
+              <ode />
+            </friction>
+
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    </world>
+</sdf>

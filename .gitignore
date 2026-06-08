@@ -1,0 +1,40 @@
+# ROS/catkin build outputs
+/build/
+/devel/
+/install/
+/log/
+/.catkin_tools/
+/.catkin_workspace
+
+# Generated experiment outputs
+src/**/results/
+*.bag
+*.db3
+*.mcap
+*.csv
+*_metrics.json
+*_metrics.txt
+*.mp4
+*.avi
+*.mov
+
+# Python/cache files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*~
+src/**/FULL_CONVERSATION_LOG.md
+src/**/RUN_LOG_*.md
+
+# Local tool/editor metadata
+/.agents/
+/.codex/
+/.claude/
+/.vscode/

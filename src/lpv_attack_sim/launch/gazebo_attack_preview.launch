@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="gui" default="true"/>
+  <arg name="world" default="$(find gazebo_ros)/launch/empty_world.launch"/>
+
+  <include file="$(arg world)">
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+  </include>
+
+  <node pkg="lpv_attack_sim"
+        type="gazebo_attack_preview.py"
+        name="gazebo_attack_preview"
+        output="screen"/>
+</launch>
